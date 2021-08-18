@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Color gradient designer</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	
+		
+	<link rel="stylesheet" href="style.css">
+	<script src="gradient.js"></script>
+	<script src="color_gradient_designer.js"></script>
+	
+	
+	
+	
+</head>
+
+
+
+<body onload="onHashChanged();" onhashchange="onHashChanged();">
+
+<header>
+
+	<h1 style="margin: 15px;">Color gradient designer</h1>
+	
+	<div class="menu">
+		<div title="Undo" onclick="window.history.back();">&#x21a9;&#xfe0f;</div>
+		<div title="Redo" onclick="window.history.forward();">&#x21aa;&#xfe0f;</div>
+		<div title="Copy link" onclick="navigator.clipboard.writeText(window.location);makeSnackbarNotification('Copied to clipboard!');">&#x1f517;</div>
+		<a title="Visit repository" href="https://github.com/eltos/gradient" style="text-decoration: none;">&#129302;&#xfe0f;</a>
+	</div>
+
+</header>
+
+<main>
+
+	<div class="gradient">
+	
+			
+		<div class="gradient-background left"></div>
+		<div class="gradient-background" id="gradient-background"></div>
+		<div class="gradient-background right"></div>
+		<div class="bar" >		
+			<div id="sliders"></div>
+			<div id="gradient" title="Click to add anchor" onclick="actionInsert(event);"></div>
+		</div>
+		<div class="control">
+			
+			<div class="settings">
+				<div class="setting">
+					<label class="switch">
+						<input type="checkbox" id="setting-cyclic" checked onchange="onHashChanged();"/>
+						<span class="slider round reactive"></span>
+					</label>
+					<label class="switchlabel">Show cyclic gradient</label>
+				</div>
+				<div class="setting">
+					<button class="button" onclick="actionDistribute();">Distribute evenly</button>
+				</div>
+				<div class="setting">
+					<button class="button" onclick="actionReverse();">Reverse</button>
+				</div>
+				<div class="setting">
+					<button class="button" onclick="actionNormalizeLightness();">Normalize lightness</button>
+				</div>
+			</div>
+			
+			<div class="code-tabs">
+				<div class="tab-bar">
+					<!-- tab buttons -->
+					<div id="tab-bar-box"></div>
+				</div>
+				<div class="codebox codestyle selected" title="Click to copy code to clipboard" onclick="copyCode();">
+					<div class="tab-body" id="tab-body-box">
+						<!-- tab contents -->
+						<div class="hint">Click to copy</div>
+					</div>
+				</div>
+			</div>
+			
+			
+		</div>
+	</div>
+
+</main>
+
+
+<div id="snackbar">...</div>
+
+</body>
+</html>
