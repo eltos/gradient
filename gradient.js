@@ -119,10 +119,13 @@ class Gradient extends Array {
  */
 
 
-code_palette_name = 'my_color_palette';
-code_flavour_default = 'code-css';
-code_include_url = false;
-code_flavours = {
+codePaletteName = 'my_color_palette';
+codeFlavourDefault = 'code-css';
+codePrintUrl = true;
+
+// list of supported code flavours
+codeFlavours = {
+	// id                   title              code generating function      programming language
 	'code-css':            ['CSS',             gradient_as_css,             'language-css'       ],
 	'code-matplotlib':     ['Matplotlib',      gradient_as_matplotlib,      'language-python'    ],
 	'code-fastled':        ['FastLED',         gradient_as_fastled,         'language-ino'       ],
@@ -136,7 +139,7 @@ function gradient_as_css(gradient){
 		return "#" + gradient[0].colorHex;
 	} else {
 		return "linear-gradient(90deg,\n" +
-			(code_include_url ? "    /* " + window.location.href + " */\n" : "" ) +
+			(codePrintUrl ? "    /* " + window.location.href + " */\n" : "" ) +
 			"    " + gradient.map(
 			x => "#"+x.colorHex + "  " + x.posPercent.padStart(6, " ")
 			).join(",\n    ") + ")";
@@ -146,7 +149,7 @@ function gradient_as_css(gradient){
 
 function gradient_as_fastled(gradient, name){
 	return "DEFINE_GRADIENT_PALETTE( "+ name +" ){\n" +
-		(code_include_url ? "    /* " + window.location.href + " */\n" : "" ) +
+		(codePrintUrl ? "    /* " + window.location.href + " */\n" : "" ) +
 		"    " + gradient.map(
 		x => x.pos255.toString().padStart(3, " ") + ",  "
 			 + x.rgb.map(v => v.toString().padStart(3, " ")).join(", ")
@@ -156,7 +159,7 @@ function gradient_as_fastled(gradient, name){
 
 function gradient_as_matplotlib(gradient, name){
 	return "LinearSegmentedColormap.from_list('" + name + "', (\n" +
-		(code_include_url ? "    # " + window.location.href + "\n" : "" ) +
+		(codePrintUrl ? "    # " + window.location.href + "\n" : "" ) +
 		"    " + gradient.map(
 		x => "(" + x.pos.toFixed(3) + ", " 
 			 + "(" + x.rgb.map(v => (v/255).toFixed(3)).join(", ") + "))"

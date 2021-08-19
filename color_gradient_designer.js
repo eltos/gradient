@@ -213,8 +213,8 @@ function uiRefreshAll(){
 		
 	
 	// update code output
-	for (let id in code_flavours){
-		let [title, builder, language] = code_flavours[id];
+	for (let id in codeFlavours){
+		let [title, builder, language] = codeFlavours[id];
 
 		let codeBox = document.getElementById(id);
 		if (!codeBox){
@@ -224,14 +224,14 @@ function uiRefreshAll(){
 			codeBox.id = id;
 			codeBox.classList.add('code', 'tab-body-container', language);
 			let pre = document.createElement('pre');
-			pre.style.display = id === code_flavour_default ? 'block' : 'none';
+			pre.style.display = id === codeFlavourDefault ? 'block' : 'none';
 			pre.appendChild(codeBox);
 			document.getElementById('tab-body-box').appendChild(pre);
 
 			// create tab button
 			let button = document.createElement('button');
 			button.classList.add('tab-bar-button', 'codestyle');
-			if (id === code_flavour_default) { button.classList.add('selected'); }
+			if (id === codeFlavourDefault) { button.classList.add('selected'); }
 			button.innerHTML = title;
 			button.addEventListener('click', (function(){
 				const i=id;
@@ -239,10 +239,9 @@ function uiRefreshAll(){
 					openTab(i, e.target)
 				};
 			})());
-			document.getElementById('tab-bar-box').appendChild(button);
-			//document.getElementById('tab-bar-box').insertBefore(button, document.getElementById('tab-bar-box').lastElementChild);
+			document.getElementById('tab-bar-box').insertBefore(button, document.getElementById('tab-bar-box').lastElementChild);
 		}
-		codeBox.innerHTML = builder(gradient, code_palette_name);
+		codeBox.innerHTML = builder(gradient, codePaletteName);
 	}
 	
 }
@@ -252,7 +251,7 @@ async function copyCode(){
 	for (let i = 0; i < codeBoxes.length; i++) {
 		if (codeBoxes[i].parentElement.style.display !== "none"){
 			await navigator.clipboard.writeText(codeBoxes[i].innerHTML);
-			makeSnackbarNotification(code_flavours[codeBoxes[i].id][0] + ' code copied to clipboard!');
+			makeSnackbarNotification(codeFlavours[codeBoxes[i].id][0] + ' code copied to clipboard!');
 			break;
 		}
 	}

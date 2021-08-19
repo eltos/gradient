@@ -32,12 +32,19 @@ code {
 }
 
 
-.menu {
-	position: absolute;
-	flex-direction: row;
+header {
 	display: flex;
-	right: 0;
-	top: 0;
+}
+
+.title {
+	flex-grow: 1;
+	margin: 15px;
+}
+
+.menu {
+	flex-flow: row wrap;
+	justify-content: flex-end;
+	display: flex;
 	font-size: 40px;
 	margin-right: 5px;
 	cursor: pointer;
@@ -70,15 +77,16 @@ code {
  */
 
 .gradient {
-	height: 100%;
+	min-height: 100%;
 	position: relative;
 }
 
 .gradient .gradient-background {
-	position: absolute;
+	position: fixed;
 	height: 100%;
 	width: 90%;
 	left: 5%;
+	z-index: -1;
 }
 
 .gradient .gradient-background.left {
@@ -333,7 +341,6 @@ input:checked + .slider:before {
 }
 
 .code-tabs .codebox {
-	min-width: max-content;
 	position: relative;
 	border-top-left-radius: 0px;
 	cursor: pointer;
@@ -342,7 +349,7 @@ input:checked + .slider:before {
 .code-tabs .codebox pre {
 	margin: 0px;
 	padding: 8px;
-	overflow: hidden;
+	overflow-x: auto;
 	background-color: transparent;
 	border: none;
 }
