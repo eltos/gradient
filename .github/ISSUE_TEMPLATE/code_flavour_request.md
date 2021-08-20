@@ -19,9 +19,9 @@ Insert an example for generated code here
 If you want to provide an implementation for code generation, start with the template below
 
 ```javascript
-function gradient_as_xxxxxx(gradient) {
-  return "      " + codePaletteName + "\n" +
-    (codePrintUrl ? "    // " + window.location.href + "\n" : "") +
+function gradient_as_xxxxxx(gradient, name, comment) {
+  return "      " + name + "\n" +
+    (comment ? "    // " + comment + "\n" : "") +
     gradient.map(x =>
       x.pos,          // 0 .. 1
       x.posPercent,   // 0% .. 100%

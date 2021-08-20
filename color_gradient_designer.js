@@ -239,9 +239,10 @@ function uiRefreshAll(){
 					openTab(i, e.target)
 				};
 			})());
-			document.getElementById('tab-bar-box').insertBefore(button, document.getElementById('tab-bar-box').lastElementChild);
+			document.getElementById('tab-bar-box').appendChild(button);
 		}
-		codeBox.innerHTML = builder(gradient, codePaletteName);
+		codeBox.textContent = builder(gradient, codePaletteName,
+			"Edit this gradient at " + window.location.href);
 	}
 	
 }
@@ -250,7 +251,7 @@ async function copyCode(){
 	let codeBoxes = document.getElementsByClassName('code');
 	for (let i = 0; i < codeBoxes.length; i++) {
 		if (codeBoxes[i].parentElement.style.display !== "none"){
-			await navigator.clipboard.writeText(codeBoxes[i].innerHTML);
+			await navigator.clipboard.writeText(codeBoxes[i].textContent);
 			makeSnackbarNotification(codeFlavours[codeBoxes[i].id][0] + ' code copied to clipboard!');
 			break;
 		}
