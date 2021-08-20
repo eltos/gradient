@@ -202,7 +202,7 @@ function uiRefreshAll(){
 	// update gradient visualisation
 	let backgrounds = document.getElementsByClassName("gradient-background");
 	let cyclic = document.getElementById('setting-cyclic').checked;
-	let style = gradient_as_css(gradient);
+	let style = CodeFlavourCSS.generate(gradient);
 	for (let i = 0; i < backgrounds.length; i++) {
 		if (!cyclic && (backgrounds[i].classList.contains("left") || backgrounds[i].classList.contains("right"))){
 			backgrounds[i].style.background = "#" + gradient.interpolate(backgrounds[i].classList.contains("left") ? 0 : 255).colorHex;
@@ -213,35 +213,33 @@ function uiRefreshAll(){
 		
 	
 	// update code output
-	for (let id in codeFlavours){
-		let [title, builder, language] = codeFlavours[id];
-
-		let codeBox = document.getElementById(id);
+	for (let flavour of codeFlavours){
+		let codeBox = document.getElementById(flavour.id);
 		if (!codeBox){
 
 			// create new code tab
 			codeBox = document.createElement('code');
-			codeBox.id = id;
-			codeBox.classList.add('code', 'tab-body-container', language);
+			codeBox.id = flavour.id;
+			codeBox.classList.add('code', 'tab-body-container', flavour.language);
 			let pre = document.createElement('pre');
-			pre.style.display = id === codeFlavourDefault ? 'block' : 'none';
+			pre.style.display = flavour.id === codeFlavourDefault ? 'block' : 'none';
 			pre.appendChild(codeBox);
 			document.getElementById('tab-body-box').appendChild(pre);
 
 			// create tab button
 			let button = document.createElement('button');
 			button.classList.add('tab-bar-button', 'codestyle');
-			if (id === codeFlavourDefault) { button.classList.add('selected'); }
-			button.innerHTML = title;
+			if (flavour.id === codeFlavourDefault) { button.classList.add('selected'); }
+			button.innerHTML = flavour.title;
 			button.addEventListener('click', (function(){
-				const i=id;
+				const i=flavour.id;
 				return function(e){
 					openTab(i, e.target)
 				};
 			})());
 			document.getElementById('tab-bar-box').appendChild(button);
 		}
-		codeBox.textContent = builder(gradient, codePaletteName,
+		codeBox.textContent = flavour.generate(gradient, codeGradientName,
 			"Edit this gradient at " + window.location.href);
 	}
 	
@@ -249,14 +247,27 @@ function uiRefreshAll(){
  
 async function copyCode(){
 	let codeBoxes = document.getElementsByClassName('code');
-	for (let i = 0; i < codeBoxes.length; i++) {
-		if (codeBoxes[i].parentElement.style.display !== "none"){
-			await navigator.clipboard.writeText(codeBoxes[i].textContent);
-			makeSnackbarNotification(codeFlavours[codeBoxes[i].id][0] + ' code copied to clipboard!');
-			break;
-		}
-	}
+	let visibleCodeBox = Array.from(codeBoxes).find(x => x.offsetParent);
+	await navigator.clipboard.writeText(visibleCodeBox.textContent);
+	makeSnackbarNotification(codeFlavours.find(x => x.id === visibleCodeBox.id).title + ' code copied to clipboard!');
 }
+
+function downloadVirtualFile(filename, extension, contents){
+	let element = document.createElement('a');
+	element.href = 'data:application/' + extension + ';charset=utf-8,' + encodeURIComponent(contents);
+	element.download = filename + "." + extension;
+	element.click();
+	makeSnackbarNotification(element.download + ' ready for download');
+}
+
+function downloadCode(){
+	let codeBoxes = document.getElementsByClassName('code');
+	let visibleCodeBox = Array.from(codeBoxes).find(x => x.offsetParent);
+	let flavour = codeFlavours.find(x => x.id === visibleCodeBox.id);
+	let contents = flavour.hasOwnProperty("file") ? flavour.file(visibleCodeBox.textContent) : visibleCodeBox.textContent;
+	downloadVirtualFile(codeGradientName, flavour.extension, contents);
+}
+
 
 function openTab(id, activeButton){
 	let tabs = Array.from(document.getElementsByClassName('tab-body-container'));
