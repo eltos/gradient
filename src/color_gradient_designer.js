@@ -1,8 +1,9 @@
 
 
 
-/*
+/**
  * Gradient designer GUI
+ * code for index.html
  */
 
 let gradient = new Gradient();

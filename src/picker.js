@@ -1,4 +1,14 @@
-
+/**
+ * HSV color picker
+ *
+ * Add this to page head:
+ * 	 <link rel="stylesheet" href="src/picker.css">
+ *   <script src="src/picker.js"></script>
+ * and to page body:
+ *   <div class="picker" id="picker"></div>
+ *
+ *
+ */
 
 
 function color2hsv(color) {

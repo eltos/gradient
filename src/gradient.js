@@ -1,5 +1,12 @@
-
-
+/**
+ * Base model for a color gradient
+ * as a list of nodes each with position and rgb color
+ *
+ * Hash format: PP:RRGGBB-PP:RRGGBB-PP:RRGGBB-...
+ * PP = position in percent (float, optional)
+ * RRGGBB = color in RGB hex format
+ *
+ */
 
 class Node {
 	

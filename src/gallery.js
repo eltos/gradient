@@ -1,5 +1,8 @@
  
-
+/**
+ * Code for gallery.html
+ *
+ */
 
 function getCookie(name){
 	let raw = document.cookie.split(";").map(x => x.split("=")).find(x => x[0].trim() == name);

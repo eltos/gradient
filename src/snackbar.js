@@ -1,5 +1,5 @@
-/*
- * GUI general
+/**
+ * Snackbar notification
  */
 
 function makeSnackbarNotification(text) {
