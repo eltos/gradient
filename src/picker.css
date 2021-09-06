@@ -1,0 +1,86 @@
+
+/*
+ * Color picker
+ */
+
+.picker {
+    position: absolute;
+    transform: translateX(calc(-50% - 10px));
+    background:white;
+    padding: 5px;
+    margin: 10px;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    border-color: lightgrey;
+    z-index: 999;
+}
+
+.picker .picker-hue {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.picker .picker-hue .hue-circle {
+    position: absolute;
+    margin: 5px;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    background: conic-gradient(#f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+    border-radius: 150%;
+}
+
+.picker .picker-hue .hue-inner-circle {
+    position: absolute;
+    margin: 25px;
+    width: calc(100% - 50px);
+    height: calc(100% - 50px);
+    background: white;
+    border-radius: 100%;
+}
+
+.picker .picker-hue .hue-node {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: calc(50% - 15px);
+    height: calc(50% - 15px);
+}
+
+.picker .node {
+    position: absolute;
+    left: 0%;
+    top: -100%;
+    transform: translate(-6px, -6px);
+    width: 6px;
+    height: 6px;
+    background: transparent;
+    border-style: solid;
+    border-width: 3px;
+    border-color: black;
+    border-radius: 100%;
+    z-index: 1001;
+}
+
+.picker .picker-sv {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    left: 5%;
+    top: 5%;
+}
+
+.picker .picker-sv .picker-triangle {
+    width: 100%;
+    height: 100%;
+}
+
+.picker .picker-sv .sv-node {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50%;
+    height: 50%;
+}
+

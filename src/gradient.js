@@ -81,7 +81,7 @@ class Gradient extends Array {
 	}
 	
 	isDistributedEvenly(){
-		return this.every((x, i) => x.pos === i/(this.length-1));
+		return this.length <= 1 || this.every((x, i) => x.pos === i/(this.length-1));
 	}
 	
 	interpolate(pos){

@@ -1,23 +1,5 @@
 
 
-/*
- * GUI general
- */
-
-function makeSnackbarNotification(text, duration=3000) {
-	let x = document.getElementById("snackbar");
-	x.innerHTML = text;
-	x.className = "show";
-	setTimeout(function(){ x.className = x.className.replace("show", ""); }, duration);
-}
-
-
-
-
-
-
-
-
 
 /*
  * Gradient designer GUI
@@ -26,23 +8,7 @@ function makeSnackbarNotification(text, duration=3000) {
 let gradient = new Gradient();
 let flowIgnoreNewHash = false;
 let flowPauseHashUpdates = false;
-
-
-function createInputElement(slider, classname, title, callback){
-	let dot = document.createElement("input");
-	dot.slider = slider;
-	dot.classList.add("slider-input", classname);
-	dot.title = title;
-	dot.type = "number";
-	dot.min = 0;
-	dot.max = 255;
-	if (callback){
-		dot.addEventListener("change", callback);
-	} else {
-		dot.readOnly = true;
-	}
-	return dot;
-}
+let activeSliderElement = undefined;
 
 function createSliderElement(){
 	let slider = document.createElement("div");
@@ -50,21 +16,54 @@ function createSliderElement(){
 	
 	let colorLens = document.createElement("div");
 	colorLens.classList.add("slider-lens");
-	makeSliderDraggable(colorLens);
+	makeDraggable(colorLens, function (element, e) {
+		// update position
+		let box = element.closest('.bar').getBoundingClientRect()
+		let x = e.clientX || e.touches[0].clientX;
+		let value = (x - box.left) / box.width;
+		flowPauseHashUpdates = true;
+		actionChange(element.parentElement, 'pos', value);
+		flowPauseHashUpdates = false;
+	});
 	slider.circle = colorLens;
 	slider.appendChild(colorLens);
 	
 	let inputContainer = document.createElement("div");
 	inputContainer.classList.add("slider-inputs");
-	slider.input_p = createInputElement(slider, "slider-input-p", "Anchor position",       function(event) {actionChange(event.target.slider, 'pos', event.target.value/100)});
-	slider.input_r = createInputElement(slider, "slider-input-r", "Red color component",   function(event) {actionChange(event.target.slider, 'r', event.target.value)});
-	slider.input_g = createInputElement(slider, "slider-input-g", "Green color component", function(event) {actionChange(event.target.slider, 'g', event.target.value)});
-	slider.input_b = createInputElement(slider, "slider-input-b", "Blue color component",  function(event) {actionChange(event.target.slider, 'b', event.target.value)});
-	inputContainer.appendChild(slider.input_p);
-	inputContainer.appendChild(slider.input_r);
-	inputContainer.appendChild(slider.input_g);
-	inputContainer.appendChild(slider.input_b);
 	slider.appendChild(inputContainer);
+
+	slider.input_pos = document.createElement("input");
+	slider.input_pos.slider = slider;
+	slider.input_pos.classList.add("slider-input", "slider-input-p");
+	Object.assign(slider.input_pos, {title: "Anchor position (%)",
+		type: "number", min: 0, max: 100});
+	slider.input_pos.addEventListener("change", function(event) {
+		actionChange(event.target.slider, 'pos', event.target.value/100)});
+	inputContainer.appendChild(slider.input_pos);
+
+	slider.input_col = document.createElement("input");
+	slider.input_col.slider = slider;
+	slider.input_col.classList.add("slider-input", "slider-input-c");
+	Object.assign(slider.input_col, {title: "Anchor color (hex)",
+		type: "text", pattern:"[0-9A-Fa-f]{6}"});
+	slider.input_col.addEventListener("change", function(event) {
+		let s = event.target.value;
+		if (s.startsWith('#')) s = s.substr(1);
+		if (s.length <= 3) s = Array.from(s).map(x => x+x).join("");
+		actionChange(event.target.slider, 'color', parseInt(s, 16))});
+	slider.input_col.addEventListener('focus', function (event) {
+		activeSliderElement = event.target.slider;
+		pickerSetColor(parseInt(event.target.value, 16));
+		let box = event.target.getBoundingClientRect();
+		let x = event.target.slider.style.left,
+			y = box.bottom - document.getElementsByClassName('bar')[0].getBoundingClientRect().top + "px";
+		pickerShow(x, y);
+	});
+	slider.input_col.addEventListener('focusout', function (){
+		activeSliderElement = undefined;
+		pickerHide();
+	});
+	inputContainer.appendChild(slider.input_col);
 	
 	let deleteButton = document.createElement("button");
 	deleteButton.addEventListener("click", function(event) {actionDelete(event.target.parentElement)})
@@ -81,48 +80,11 @@ function createSliderElement(){
 function updateSlider(slider, node){
 	slider.style.left = node.posPercent;
 	slider.circle.style.background = "#"+node.colorHex;
-	slider.input_p.value = Math.round(node.pos*1000)/10;
-	slider.input_r.value = node.r;
-	slider.input_g.value = node.g;
-	slider.input_b.value = node.b;
+	slider.input_pos.value = Math.round(node.pos*1000)/10;
+	slider.input_col.value = node.colorHex;
 }
 
 
-function makeSliderDraggable(element) {
-	element.addEventListener('mousedown', dragStart);
-	element.addEventListener('touchstart', dragStart);
-	let transitionToRestore;
-	
-	function dragStart(e) {
-		e.preventDefault();
-		document.addEventListener('mousemove', dragMove);
-		document.addEventListener('touchmove', dragMove, { passive: false });
-		document.addEventListener('mouseup', dragEnd);
-		document.addEventListener('touchend', dragEnd);
-		flowPauseHashUpdates = true;
-		transitionToRestore = element.parentElement.style.transition;
-		element.parentElement.style.transition = "none";
-	}
-
-	function dragMove(e) {
-		e.preventDefault();
-		// update position
-		let box = element.closest('.bar').getBoundingClientRect()
-		let x = e.clientX || e.touches[0].clientX;
-		let value = (x - box.left) / box.width;
-		actionChange(element.parentElement, 'pos', value);
-	}
-
-	function dragEnd() {
-		document.removeEventListener('mousemove', dragMove);
-		document.removeEventListener('touchmove', dragMove);
-		document.removeEventListener('mouseup', dragEnd);
-		document.removeEventListener('touchend', dragEnd);
-		flowPauseHashUpdates = false;
-		element.parentElement.style.transition = transitionToRestore;
-		applyGradient();
-	}
-}
 
 
 function actionDelete(slider){
@@ -142,6 +104,9 @@ function actionChange(slider, key, value){
 	let i = gradient.findIndex(x => x.slider === slider);
 	gradient[i][key] = value;
 	applyGradient();
+	if (key === 'color') {
+		pickerSetColor(value);
+	}
 }
 
 
@@ -171,6 +136,18 @@ function applyGradient(){
 	uiRefreshAll();
 }
 
+function onLoad(){
+	initPicker('picker', function (color) {
+		if (activeSliderElement === undefined) return;
+		let i = gradient.findIndex(x => x.slider === activeSliderElement);
+		gradient[i].color = color;
+		flowPauseHashUpdates = true;
+		applyGradient();
+		flowPauseHashUpdates = false;
+	});
+	onHashChanged();
+}
+
 function onHashChanged(){
 	if (flowIgnoreNewHash){
 		flowIgnoreNewHash = false;
@@ -178,8 +155,9 @@ function onHashChanged(){
 	}
 	gradient = Gradient.fromHash(window.location.hash);
 	if (gradient.length === 0){
-		// TODO: redirect to default gradient?
-		makeSnackbarNotification('Start adding anchors by clicking on the bar');
+		// redirect to default gradient
+		window.location.hash = "0:093391-33:019C5C-56:ABCD39-64:BFD336-77:B7D135-100:84CE34";
+		makeSnackbarNotification('Click on the bar to add anchors');
 	}
 	uiRefreshAll();
 }

@@ -9,10 +9,16 @@
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
 
-	<link rel="stylesheet" href="style.css">
+	<script src="src/util.js"></script>
+
+	<link rel="stylesheet" href="src/style.css">
 	<script src="src/gradient.js"></script>
 	<script src="src/generators.js"></script>
+	<script src="src/snackbar.js"></script>
 	<script src="src/color_gradient_designer.js"></script>
+
+	<link rel="stylesheet" href="src/picker.css">
+	<script src="src/picker.js"></script>
 	
 	
 	
@@ -21,17 +27,18 @@
 
 
 
-<body onload="onHashChanged();" onhashchange="onHashChanged();">
+<body onload="onLoad();" onhashchange="onHashChanged();">
 
 <header>
 
 	<h1 class="title">Color gradient designer</h1>
 	
 	<div class="menu">
+		<a title="Favourites" onclick="window.location = 'gallery.html' + window.location.hash" >&#x2b50;&#xfe0f;</a>
+		<div title="Copy permalink" onclick="navigator.clipboard.writeText(window.location);makeSnackbarNotification('Link copied to clipboard!');">&#x1f517;</div>
 		<div title="Undo" onclick="window.history.back();">&#x21a9;&#xfe0f;</div>
 		<div title="Redo" onclick="window.history.forward();">&#x21aa;&#xfe0f;</div>
-		<div title="Copy link" onclick="navigator.clipboard.writeText(window.location);makeSnackbarNotification('Link copied to clipboard!');">&#x1f517;</div>
-		<a title="Visit repository" href="https://github.com/eltos/gradient" style="text-decoration: none;">&#129302;&#xfe0f;</a>
+		<a title="Visit repository" href="https://github.com/eltos/gradient">&#129302;&#xfe0f;</a>
 	</div>
 
 </header>
@@ -39,6 +46,9 @@
 <main>
 
 	<div class="gradient">
+
+
+
 	
 			
 		<div class="gradient-background left"></div>
@@ -47,13 +57,16 @@
 		<div class="bar" >		
 			<div id="sliders"></div>
 			<div id="gradient" title="Click to add anchor" onclick="actionInsert(event);"></div>
+			<div class="picker" id="picker"></div>
 		</div>
+
+
 		<div class="control">
 			
 			<div class="settings">
 				<div class="setting">
 					<label class="switch">
-						<input type="checkbox" id="setting-cyclic" checked onchange="onHashChanged();"/>
+						<input type="checkbox" id="setting-cyclic" onchange="onHashChanged();"/>
 						<span class="slider round reactive"></span>
 					</label>
 					<label class="switchlabel">Show cyclic gradient</label>
@@ -94,8 +107,6 @@
 
 </main>
 
-
-<div id="snackbar">...</div>
 
 </body>
 </html>

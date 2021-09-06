@@ -52,7 +52,8 @@ header {
 
 .menu * {
 	margin: 5px;
-	opacity: 70%
+	opacity: 70%;
+	text-decoration: none;
 }
 
 .menu *:hover {
@@ -126,56 +127,42 @@ header {
 	width: 6px;
 	height: 50px;
 	border-style: groove;
-	border-color: black;
+	border-color: white;
 	border-width: 3px;
 	border-radius: 10px;
 	transform: translate(-6px, -3px);
 	position: absolute;
 	box-sizing: unset;
-	cursor: move;
-}
-
-.gradient .bar .slider-lens:hover {
-	border-color: gray;
 }
 
 .gradient .bar .slider-inputs {
 	position: absolute;
 	top: 55px;
-	left: -25px;
+	transform: translateX(-50%);
 }
 
 .gradient .bar .slider-input {
-	width: 50px;
+	position: relative;
 	height: 25px;
 	box-sizing: border-box;
 	border-style: solid;
 	border-radius: 25px;
 	border-width: 2px;
-	padding: 0px;
+	border-color: lightgrey;
 	text-align: center;
 	font-size: medium;
+	color: black;
 }
 
 .gradient .bar .slider-input-p {
-	border-color: lightgrey;
-	color: black;
+	width: 50px;
+	left: calc(50% - 25px);
 	margin-bottom: 5px;
 }
 
-.gradient .bar .slider-input-r {
-	border-color: red;
-	color: darkred;
-}
-
-.gradient .bar .slider-input-g {
-	border-color: green;
-	color: darkgreen;
-}
-
-.gradient .bar .slider-input-b {
-	border-color: blue;
-	color: darkblue;
+.gradient .bar .slider-input-c {
+	width: 75px;
+	font-family: Consolas, "Courier New", monospace;
 }
 
 .gradient .bar .slider-delete {
@@ -475,3 +462,83 @@ input::-webkit-inner-spin-button {
 input[type=number] {
 	-moz-appearance: textfield;
 }
+
+
+
+/*
+ *  Gallery
+ */
+
+
+#gradient-box-table {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-gap: 30px;
+	padding: 30px;
+}
+
+.gradient-box {
+	position: relative;
+	height: 150px;	
+	transition: 0.1s;
+}
+
+.gradient-box:hover {
+	transform: scale(1.05);
+}
+
+.gradient-box a {
+	position: absolute;
+	width: 100%;
+	height: 100%
+}
+
+.gradient-box .item-delete {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 20px;
+	height: 20px;
+	background: black;
+	color: white;
+	border-width: 0px;
+	padding: 0px;
+	text-align: center;
+	cursor: pointer;
+	opacity: 20%;
+}
+
+.gradient-box .item-add {
+	position: absolute;
+	left: calc(50% - 40px);
+	top: calc(50% - 25px);
+	width: 80px;
+	height: 50px;
+	background: white;
+	color: black;
+	border-width: 0px;
+	border-radius: 50px;
+	padding: 0px;
+	text-align: center;
+	cursor: pointer;
+	opacity: 50%;	
+	font-size: xxx-large;
+	line-height: 100%;
+}
+
+.gradient-box *:hover {
+	opacity: 100%;
+}
+
+
+
+
+
+
+.footertext {
+	background: #eeeeee;
+	padding: 10px;
+	text-align: center;
+}
+
+
