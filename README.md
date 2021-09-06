@@ -1,8 +1,8 @@
 # 🎨 Color gradient designer
 
-A simple javascript based page for design of color gradients.
-Generates appropriate code for usage in your project via copy&paste 
-and allows to share the gradients as URL.
+A simple javascript based color gradient designer for your browser.
+Generates appropriate code for usage in your project via copy&paste or file download.
+You can share the gradients as URL and save your favourites in a personal gallery.
 
-https://eltos.github.io/gradient#F3DC00-FAA300-FF6201-FF1E02-F3DC00
+https://eltos.github.io/gradient
 
