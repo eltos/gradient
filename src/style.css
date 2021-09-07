@@ -48,7 +48,7 @@ header {
 	cursor: pointer;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 650px) {
 	.title {
 		font-size: xx-large;
 	}
@@ -108,9 +108,9 @@ header {
 
 .gradient .bar {
 	position: absolute;
-	width: 90%;
-	left: 5%;
-	top: 10%;
+	width: calc(100% - 80px);
+	left: 40px;
+	top: 5%;
 	height: 50px;
 	margin-top: 40px;
 	border-style: groove;
@@ -120,6 +120,14 @@ header {
 	transform: translateX(-3px);
 	box-sizing: unset;
 	z-index: 10;
+}
+
+@media only screen and (min-width: 650px) {
+	.gradient .bar {
+		width: 90%;
+		left: 5%;
+		top: 10%;
+	}
 }
 
 
@@ -203,14 +211,22 @@ header {
 
 .gradient .control {
 	position: absolute;
-	width: 68%;
-	left: 15%;
-	padding: 1%;
+	width: 96%;
+	padding: 2%;
+	top: 10%;
 	height: max-content;
-	top: 20%;
 	margin-top: 200px;
 	background: white;
-	border-radius: 10px;
+}
+
+@media only screen and (min-width: 650px) {
+	.gradient .control {
+		width: 68%;
+		left: 15%;
+		top: 20%;
+		padding: 1%;
+		border-radius: 10px;
+	}
 }
 
 .gradient .control > * {
