@@ -231,6 +231,11 @@ async function copyCode(){
 	makeSnackbarNotification(codeFlavours.find(x => x.id === visibleCodeBox.id).title + ' code copied to clipboard!');
 }
 
+async function copyLink(){
+	await navigator.clipboard.writeText(window.location);
+	makeSnackbarNotification('Link copied to clipboard!');
+}
+
 function downloadVirtualFile(filename, extension, contents){
 	let element = document.createElement('a');
 	element.href = 'data:application/' + extension + ';charset=utf-8,' + encodeURIComponent(contents);

@@ -34,11 +34,11 @@
 	<h1 class="title">Color gradient designer</h1>
 	
 	<div class="menu">
-		<a title="Favourites" onclick="window.location = 'gallery.html' + window.location.hash" >&#x2b50;&#xfe0f;</a>
-		<div title="Copy permalink" onclick="navigator.clipboard.writeText(window.location);makeSnackbarNotification('Link copied to clipboard!');">&#x1f517;</div>
-		<div title="Undo" onclick="window.history.back();">&#x21a9;&#xfe0f;</div>
-		<div title="Redo" onclick="window.history.forward();">&#x21aa;&#xfe0f;</div>
-		<a title="Visit repository" href="https://github.com/eltos/gradient">&#x2139;&#xfe0f;</a>
+		<a title="Favourites" href="gallery" onclick="window.location='gallery'+window.location.hash; return false" class="emoji">&#x2b50;&#xfe0f;</a>
+		<div title="Copy permalink" onclick="copyLink();" class="emoji">&#x1f517;&#xfe0f;</div>
+		<div title="Undo" onclick="window.history.back();" class="emoji">&#x21a9;&#xfe0f;</div>
+		<div title="Redo" onclick="window.history.forward();" class="emoji">&#x21aa;&#xfe0f;</div>
+		<a title="Visit repository" href="https://github.com/eltos/gradient" class="emoji">&#x2139;&#xfe0f;</a>
 	</div>
 
 </header>
