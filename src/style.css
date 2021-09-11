@@ -91,29 +91,31 @@ header {
 .gradient {
 	min-height: 100%;
 	position: relative;
+	padding-top: 10px;
 }
 
 .gradient .gradient-background {
-	position: fixed;
+	position: absolute;
 	height: 100%;
-	width: 90%;
-	left: 5%;
+	width: calc(100% - 100px);
+	left: 50px;
+	top: 0px;
 	z-index: -1;
 }
 
 .gradient .gradient-background.left {
-	left: -85%;
+	left: calc(50px - (100% - 100px));
 }
 
 .gradient .gradient-background.right {
-	left: 95%;
+	left: calc(50px + 100% - 100px);
 }
 
 
 .gradient .bar {
-	position: absolute;
-	width: calc(100% - 80px);
-	left: 40px;
+	position: relative;
+	width: calc(100% - 100px);
+	left: 50px;
 	top: 5%;
 	height: 50px;
 	margin-top: 40px;
@@ -126,11 +128,21 @@ header {
 	z-index: 10;
 }
 
-@media only screen and (min-width: 650px) {
+@media only screen and (min-width: 1000px) {
 	.gradient .bar {
 		width: 90%;
 		left: 5%;
 		top: 10%;
+	}
+	.gradient .gradient-background {
+		width: 90%;
+		left: 5%;
+	}
+	.gradient .gradient-background.left {
+		left: -85%;
+	}
+	.gradient .gradient-background.right {
+		left: 95%;
 	}
 }
 
@@ -214,7 +226,7 @@ header {
 
 
 .gradient .control {
-	position: absolute;
+	position: relative;
 	width: 96%;
 	padding: 2%;
 	top: 10%;
@@ -224,6 +236,9 @@ header {
 }
 
 @media only screen and (min-width: 650px) {
+	.gradient {
+		padding-bottom: 10px;
+	}
 	.gradient .control {
 		width: 68%;
 		left: 15%;
