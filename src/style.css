@@ -116,9 +116,9 @@ header {
 	position: relative;
 	width: calc(100% - 100px);
 	left: 50px;
-	top: 5%;
 	height: 50px;
-	margin-top: 40px;
+	margin-top: 60px;
+	margin-bottom: 100px;
 	border-style: groove;
 	border-color: white;
 	border-radius: 5px;
@@ -132,7 +132,7 @@ header {
 	.gradient .bar {
 		width: 90%;
 		left: 5%;
-		top: 10%;
+		margin-top: 100px;
 	}
 	.gradient .gradient-background {
 		width: 90%;
@@ -229,20 +229,18 @@ header {
 	position: relative;
 	width: 96%;
 	padding: 2%;
-	top: 10%;
 	height: max-content;
-	margin-top: 200px;
 	background: white;
 }
 
-@media only screen and (min-width: 650px) {
+@media only screen and (min-width: 700px) {
 	.gradient {
 		padding-bottom: 10px;
 	}
 	.gradient .control {
 		width: 68%;
 		left: 15%;
-		top: 20%;
+		margin-top: 200px;
 		padding: 1%;
 		border-radius: 10px;
 	}
