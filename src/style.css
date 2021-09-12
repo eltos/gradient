@@ -67,7 +67,7 @@ header {
 	text-decoration: none;
 }
 
-.menu *:hover {
+.menu *:hover, .menu *:focus {
 	opacity: 100%;
 }
 
@@ -78,7 +78,7 @@ header {
 	transition: .4s;
 }
 
-.reactive:hover {
+.reactive:hover, .reactive:focus-within {
 	z-index: 15;
 	opacity: 100%;
 }
@@ -153,6 +153,13 @@ header {
 	cursor: copy;
 }
 
+.gradient .bar #gradient:focus-visible::after {
+	position: absolute;
+	content: "Add new anchor";
+	background: white;
+	padding: 3px;
+}
+
 
 .gradient .bar .slider-lens {
 	width: 6px;
@@ -214,7 +221,7 @@ header {
 	opacity: 30%;
 }
 
-.gradient .bar .slider-delete:hover {
+.gradient .bar .slider-delete:hover, .gradient .bar .slider-delete:focus {
 	opacity: 100%;
 }
 
@@ -358,7 +365,7 @@ input:checked + .slider:before {
 	border-color: gray;
 }
 
-.code-tabs .codestyle:hover {
+.code-tabs .codestyle:hover, .code-tabs .codestyle:focus {
 	background: #eee;
 	color: #000;
 }

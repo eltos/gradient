@@ -35,15 +35,15 @@
 	
 	<div class="menu">
 		<a title="Favourites" href="gallery" onclick="window.location='gallery'+window.location.hash; return false" class="emoji">&#x2b50;&#xfe0f;</a>
-		<div title="Copy permalink" onclick="copyLink();" class="emoji">&#x1f517;&#xfe0f;</div>
-		<div title="Undo" onclick="window.history.back();" class="emoji">&#x21a9;&#xfe0f;</div>
-		<div title="Redo" onclick="window.history.forward();" class="emoji">&#x21aa;&#xfe0f;</div>
+		<div title="Copy permalink" onclick="copyLink();" class="emoji clickable">&#x1f517;&#xfe0f;</div>
+		<div title="Undo" onclick="window.history.back();" class="emoji clickable">&#x21a9;&#xfe0f;</div>
+		<div title="Redo" onclick="window.history.forward();" class="emoji clickable">&#x21aa;&#xfe0f;</div>
 		<a title="Visit repository" href="https://github.com/eltos/gradient" class="emoji">&#x2139;&#xfe0f;</a>
 	</div>
 
 </header>
 
-<main>
+<main tabindex="-1">
 
 	<div class="gradient">
 
@@ -56,7 +56,7 @@
 		<div class="gradient-background right"></div>
 		<div class="bar" >		
 			<div id="sliders"></div>
-			<div id="gradient" title="Click to add anchor" onclick="actionInsert(event);"></div>
+			<div id="gradient" class="clickable" title="Click to add anchor" onclick="actionInsert(event);"></div>
 			<div class="picker" id="picker"></div>
 		</div>
 
@@ -65,9 +65,9 @@
 			
 			<div class="settings">
 				<div class="setting">
-					<label class="switch">
+					<label class="switch reactive">
 						<input type="checkbox" id="setting-cyclic" onchange="onHashChanged();"/>
-						<span class="slider round reactive"></span>
+						<span class="slider round"></span>
 					</label>
 					<label class="switchlabel">Show cyclic gradient</label>
 				</div>

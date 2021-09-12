@@ -69,7 +69,7 @@ function createSliderElement(){
 	let deleteButton = document.createElement("button");
 	deleteButton.addEventListener("click", function(event) {actionDelete(event.target.parentElement)})
 	deleteButton.classList.add("slider-delete");
-	deleteButton.tabIndex = -1;
+	deleteButton.tabIndex = 0;
 	deleteButton.title = "Remove anchor";
 	deleteButton.textContent = "×";
 	slider.appendChild(deleteButton);
@@ -138,6 +138,7 @@ function applyGradient(){
 }
 
 function onLoad(){
+	// HSV color picker
 	initPicker('picker', function (color) {
 		if (activeSliderElement === undefined) return;
 		let i = gradient.findIndex(x => x.slider === activeSliderElement);
@@ -146,6 +147,14 @@ function onLoad(){
 		applyGradient();
 		flowPauseHashUpdates = false;
 	});
+	// accessibility
+	for (let element of document.getElementsByClassName('clickable')) {
+		element.tabIndex = 0;
+		element.addEventListener("keyup", function (e) {
+			if (e.key === 'Enter') {e.target.onclick(e);}
+		});
+	}
+
 	onHashChanged();
 }
 
@@ -202,6 +211,7 @@ function uiRefreshAll(){
 			codeBox.classList.add('code', 'tab-body-container', flavour.language);
 			let pre = document.createElement('pre');
 			pre.style.display = flavour.id === codeFlavourDefault ? 'block' : 'none';
+			pre.tabIndex = -1;
 			pre.appendChild(codeBox);
 			document.getElementById('tab-body-box').appendChild(pre);
 
