@@ -48,7 +48,6 @@ function pickerHide(){
 
 
 function pickerSetColor(color) {
-	console.log("picker set color: " + color);
     [pickerH, pickerS, pickerV] = color2hsv(color)
     pickerRefreshUI();
 }
