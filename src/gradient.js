@@ -160,6 +160,8 @@ class Node {
  */
 class Gradient extends Array {
 
+	name = undefined;
+
 	/**
 	 * Build a gradient from a hash, e.g.
 	 *   "0:FF0000-25:00FF00-87.3:0000FF"
@@ -170,7 +172,12 @@ class Gradient extends Array {
 	 */
 	static fromHash(hash){
 		// parse hash
+		let name = undefined;
 		if (hash.startsWith("#")) { hash = hash.substr(1); }
+		if (hash.includes('|')) {
+			[name, hash] = hash.split('|', 2);
+			name = decodeURIComponent(name);
+		}
 		hash = hash.trim();
 		if (!hash) { return new Gradient(); }
 		let pos_colors = hash.split('-').map(x => x.indexOf(":") < 0 ? [undefined, x] : x.split(':'));
@@ -189,7 +196,9 @@ class Gradient extends Array {
 			}
 		}
 		// build gradient
-		return new Gradient(...pos.map((p, i) => new Node(p, colors[i])));
+		let g = new Gradient(...pos.map((p, i) => new Node(p, colors[i])));
+		g.name = name;
+		return g;
 	}
 
 	/**
@@ -199,10 +208,13 @@ class Gradient extends Array {
 	 * @returns {string} hash
 	 */
 	hash(){
+		let hash = this.name ? this.name + '|' : '';
 		if (this.isDistributedEvenly()){
-			return this.map(x => x.colorHex).join("-");
+			hash += this.map(x => x.colorHex).join("-");
+		} else {
+			hash += this.map(x => Math.round(x.pos*1000)/10 + ":" + x.colorHex).join("-");
 		}
-		return this.map(x => Math.round(x.pos*1000)/10 + ":" + x.colorHex).join("-");
+		return hash;
 	}
 
 	/**
@@ -215,6 +227,7 @@ class Gradient extends Array {
 		b.hsv = [360*Math.random(), 0.2+0.8*Math.random(), 0.2+0.8*Math.random()];
 		let g = new Gradient(a, b);
 		g.subdivide(3, 'hlc_uv');
+		g.name = 'Random gradient ' + Math.round(9999*Math.random());
 		return g;
 	}
 

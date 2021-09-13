@@ -277,6 +277,11 @@ header {
 	margin: 2px;
 }
 
+.input {
+	margin: 2px;
+	height: 20px;
+}
+
 .switchlabel {
 	display: inline;
 	vertical-align: middle;
@@ -563,6 +568,16 @@ input[type=number] {
 	opacity: 50%;	
 	font-size: xxx-large;
 	line-height: 100%;
+}
+
+.gradient-box .item-title {
+	position: absolute;
+	width: calc(100% - 20px);
+	bottom: 0px;
+	padding: 5px 10px;
+	background: #FFF8;
+	font-size: medium;
+	pointer-events: none;
 }
 
 .gradient-box *:hover {

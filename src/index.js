@@ -188,12 +188,18 @@ function onHashChanged(){
 	uiRefreshAll();
 }
 
-function uiRefreshAll(){
+function onNameChanged(){
+	let input = document.getElementById("gradient-name");
+	gradient.name = input.value;
+	applyGradient();
+}
+
+function uiRefreshAll() {
 	// update sliders
 	let box = document.getElementById("sliders");
 	let obsolete = Array.from(box.children);
 	for (let i = 0; i < gradient.length; i++) {
-		if (!gradient[i].slider){
+		if (!gradient[i].slider) {
 			gradient[i].slider = createSliderElement();
 			box.appendChild(gradient[i].slider);
 		}
@@ -208,14 +214,16 @@ function uiRefreshAll(){
 	let cyclic = document.getElementById('setting-cyclic').checked;
 	let style = CodeFlavourCSS.generate(gradient);
 	for (let i = 0; i < backgrounds.length; i++) {
-		if (!cyclic && (backgrounds[i].classList.contains("left") || backgrounds[i].classList.contains("right"))){
+		if (!cyclic && (backgrounds[i].classList.contains("left") || backgrounds[i].classList.contains("right"))) {
 			backgrounds[i].style.background = "#" + gradient.colorAt(backgrounds[i].classList.contains("left") ? 0 : 255).colorHex;
 		} else {
 			backgrounds[i].style.background = style;
 		}
 	}
-		
-	
+
+	// update name
+	document.getElementById("gradient-name").value = gradient.name || '';
+
 	// update code output
 	for (let flavour of codeFlavours){
 		let codeBox = document.getElementById(flavour.id);
@@ -245,7 +253,9 @@ function uiRefreshAll(){
 			})());
 			document.getElementById('tab-bar-box').appendChild(button);
 		}
-		codeBox.textContent = flavour.generate(gradient, codeGradientName,
+
+		// refresh contents
+		codeBox.textContent = flavour.generate(gradient, gradient.name || 'my_gradient',
 			"Edit this gradient at " + window.location.href);
 	}
 	
@@ -275,8 +285,9 @@ function downloadCode(){
 	let codeBoxes = document.getElementsByClassName('code');
 	let visibleCodeBox = Array.from(codeBoxes).find(x => x.offsetParent);
 	let flavour = codeFlavours.find(x => x.id === visibleCodeBox.id);
-	let contents = flavour.hasOwnProperty("file") ? flavour.file(visibleCodeBox.textContent) : visibleCodeBox.textContent;
-	downloadVirtualFile(codeGradientName, flavour.extension, contents);
+	let contents = flavour.hasOwnProperty("file") ? flavour.file(gradient, gradient.name || 'my_gradient',
+		"Edit this gradient at " + window.location.href) : visibleCodeBox.textContent;
+	downloadVirtualFile(gradient.name || 'my_gradient', flavour.extension, contents);
 }
 
 
