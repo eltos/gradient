@@ -189,9 +189,7 @@ class Gradient extends Array {
 			}
 		}
 		// build gradient
-		let g = new Gradient();
-		g.push(...pos.map((p, i) => new Node(p, colors[i])));
-		return g;
+		return new Gradient(...pos.map((p, i) => new Node(p, colors[i])));
 	}
 
 	/**
@@ -205,6 +203,19 @@ class Gradient extends Array {
 			return this.map(x => x.colorHex).join("-");
 		}
 		return this.map(x => Math.round(x.pos*1000)/10 + ":" + x.colorHex).join("-");
+	}
+
+	/**
+	 * Generate a somewhat random gradient
+	 */
+	static random(){
+		let a = new Node(0),
+			b = new Node(1);
+		a.hsv = [360*Math.random(), 0.5+0.5*Math.random(), 0.5+0.5*Math.random()];
+		b.hsv = [360*Math.random(), 0.2+0.8*Math.random(), 0.2+0.8*Math.random()];
+		let g = new Gradient(a, b);
+		g.subdivide(3, 'hlc_uv');
+		return g;
 	}
 
 	/**
@@ -247,24 +258,20 @@ class Gradient extends Array {
 		let right = this.slice().sort().find(x => x.pos >= pos);
 		let left = this.slice().sort().reverse().find(x => x.pos < pos);
 		if (left && right){
-			console.log(left, left[interpolation], right, right[interpolation])
 			let a_left = left[interpolation], a_right = right[interpolation];
 			if (shortest_hue){
 				// adjust hue to interpolate shortest angle
 				if (Math.abs(a_left[0]-360-a_right[0]) < Math.abs(a_left[0]-a_right[0])) a_left[0] -= 360;
 				if (Math.abs(a_left[0]+360-a_right[0]) < Math.abs(a_left[0]-a_right[0])) a_left[0] += 360;
 			}
-			console.log(a_left, a_right)
 			let interp = (a1, p1, p, p2, a2) => a1.map((_,i) => (a1[i] * (p2 - p) + a2[i] * (p - p1)) / (p2 - p1));
 			let a_new = interp(a_left, left.pos, pos, right.pos, a_right);
-			console.log(a_new)
 			if (shortest_hue){
 				// correct for negative angle
 				while (a_new[0] < 0) a_new[0] += 360;
 				while (a_new[0] >= 360) a_new[0] -= 360;
 			}
 			n[interpolation] = a_new;
-			console.log(n, n[interpolation])
 
 		} else if (left){
 			n.color = left.color;

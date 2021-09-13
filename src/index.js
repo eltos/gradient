@@ -128,11 +128,17 @@ function actionReverse(){
 function actionMirror(){
 	gradient.forEach(x => x.pos *= 1/2);
 	gradient.push(...gradient.slice(0,-1).map(x => new Node(1-x.pos, x.color)));
+	document.getElementById("setting-cyclic").checked = true;
 	applyGradient();
 }
 
 function actionDistribute(){
 	gradient.distributeEvenly();
+	applyGradient();
+}
+
+function actionRandom(){
+	gradient = Gradient.random();
 	applyGradient();
 }
 
