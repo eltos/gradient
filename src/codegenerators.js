@@ -21,6 +21,7 @@ function tight(string){
 class CodeFlavourCSS {
     static id = 'code-css'; // html node id
     static title = 'CSS'; // tab title
+    static longTitle = 'Cascading Style Sheets'; // tab tooltip
     static language = 'language-css'; // language for syntax highlighting
     static extension = 'css' // file extension for download
 
@@ -94,6 +95,7 @@ class CodeFlavourFastLED {
 class CodeFlavourMatplotlib {
     static id = 'code-matplotlib';
     static title = 'Matplotlib';
+    static longTitle = 'Python Matplotlib';
     static language = 'language-python'
     static extension = 'py'
 
@@ -129,6 +131,7 @@ class CodeFlavourMatplotlib {
 class CodeFlavourSVG {
     static id = 'code-svg';
     static title = 'SVG';
+    static longTitle = 'Scalable Vector Graphics';
     static language = 'language-xml'
     static extension = 'svg'
 

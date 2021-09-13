@@ -236,6 +236,7 @@ function uiRefreshAll(){
 			button.classList.add('tab-bar-button', 'codestyle');
 			if (flavour.id === codeFlavourDefault) { button.classList.add('selected'); }
 			button.innerHTML = flavour.title;
+			button.title = flavour.longTitle || flavour.title;
 			button.addEventListener('click', (function(){
 				const i=flavour.id;
 				return function(e){
