@@ -260,16 +260,8 @@ header {
 .gradient .control .settings {
 	display: flex;
 	flex-wrap: wrap;
+	gap: 10px;
 }
-
-.gradient .control .setting {
-	margin-right: 10px;
-	min-width: max-content;
-}
-
-.gradient .control .code-tabs {
-}
-
 
 .switch {
 	vertical-align: middle;

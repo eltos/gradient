@@ -64,22 +64,19 @@
 		<div class="control">
 			
 			<div class="settings">
-				<div class="setting">
+				<div title="Show cyclic repeating gradient">
 					<label class="switch reactive">
 						<input type="checkbox" id="setting-cyclic" onchange="onHashChanged();"/>
 						<span class="slider round"></span>
 					</label>
-					<label class="switchlabel">Show cyclic gradient</label>
+					<label class="switchlabel">Cyclic repeat</label>
 				</div>
-				<div class="setting">
-					<button class="button" onclick="actionDistribute();">Distribute evenly</button>
-				</div>
-				<div class="setting">
-					<button class="button" onclick="actionReverse();">Reverse</button>
-				</div>
-				<div class="setting">
-					<button class="button" onclick="actionNormalizeLightness();">Normalize lightness</button>
-				</div>
+				<button class="button" title="Move nodes to be equally distributed" onclick="actionDistribute();">Distribute evenly</button>
+				<button class="button" title="Reverse node order" onclick="actionReverse();">Reverse</button>
+				<button class="button" title="Append mirrored version of this gradient" onclick="actionMirror();">Mirrored</button>
+				<button class="button" title="Subdivide gradient by adding nodes with color interpolated using the HLC color space" onclick="actionDivide(1, 'hlc_uv');">Subdivide using HLC</button>
+				<button class="button" title="Normalize colors to have equal lightness in HSL color space" onclick="actionNormalize('hsl', 2);">Normalize lightness</button>
+
 			</div>
 			
 			<div class="code-tabs">

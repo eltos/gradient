@@ -97,7 +97,7 @@ function actionDelete(slider){
 function actionInsert(event){
 	let box = event.target.getBoundingClientRect();
 	let pos = (event.clientX - box.left) / box.width;
-	gradient.push(gradient.interpolate(pos));
+	gradient.push(gradient.colorAt(pos));
 	applyGradient();
 }
 
@@ -110,14 +110,24 @@ function actionChange(slider, key, value){
 	}
 }
 
+function actionDivide(n = 1, interpolation='rgb'){
+	gradient.subdivide(n, interpolation);
+	applyGradient();
+}
 
-function actionNormalizeLightness(){
-	gradient.normalizeLightness();
+function actionNormalize(colorspace, axis){
+	gradient.normalize(colorspace, axis);
 	applyGradient();
 }
 
 function actionReverse(){
 	gradient.forEach(x => x.pos = 1-x.pos);
+	applyGradient();
+}
+
+function actionMirror(){
+	gradient.forEach(x => x.pos *= 1/2);
+	gradient.push(...gradient.slice(0,-1).map(x => new Node(1-x.pos, x.color)));
 	applyGradient();
 }
 
@@ -193,7 +203,7 @@ function uiRefreshAll(){
 	let style = CodeFlavourCSS.generate(gradient);
 	for (let i = 0; i < backgrounds.length; i++) {
 		if (!cyclic && (backgrounds[i].classList.contains("left") || backgrounds[i].classList.contains("right"))){
-			backgrounds[i].style.background = "#" + gradient.interpolate(backgrounds[i].classList.contains("left") ? 0 : 255).colorHex;
+			backgrounds[i].style.background = "#" + gradient.colorAt(backgrounds[i].classList.contains("left") ? 0 : 255).colorHex;
 		} else {
 			backgrounds[i].style.background = style;
 		}
