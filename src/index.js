@@ -275,7 +275,8 @@ async function copyLink(){
 
 function downloadVirtualFile(filename, extension, contents){
 	let element = document.createElement('a');
-	element.href = 'data:application/' + extension + ';charset=utf-8,' + encodeURIComponent(contents);
+	//element.href = 'data:application/' + extension + ';charset=utf-8,' + encodeURIComponent(contents);
+	element.href = window.URL.createObjectURL(new Blob([contents], {type: "octet/stream"}));
 	element.download = filename + "." + extension;
 	element.click();
 	makeSnackbarNotification(element.download + ' ready for download');

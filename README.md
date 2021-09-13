@@ -10,6 +10,7 @@ Currently supports code and file generation for
 [CSS](https://en.wikipedia.org/wiki/CSS), 
 [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics), 
 [Python Matplotlib](https://matplotlib.org), 
-[FastLED](http://fastled.io) and 
+[FastLED](http://fastled.io),
+[Photoshop](https://www.adobe.com/products/photoshop.html) and 
 [GIMP](https://www.gimp.org).
 Feel free to open an issue or submit a merge request to support additional formats.

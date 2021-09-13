@@ -226,6 +226,40 @@ class CodeFlavourGimp {
 }
 
 
+class CodeFlavourGRD {
+    static id = 'code-grd';
+    static title = 'Photoshop';
+    static longTitle = 'Photoshop GRD file';
+    static extension = 'grd'
+
+    static generate(gradient, name, comment) {
+        return hexdump(this.file(gradient, name, comment));
+    }
+
+    static file(gradient, name, comment) {
+        // GRD binary file version 3
+        let int16 = v => [v>>8, v&0xFF];
+        let binary = [0x38, 0x42, 0x47, 0x52, 0x00, 0x03]; // header
+        binary.push(0x00, 0x01); // number of gradients
+        let nameCodes = name.split('').map(x => x.charCodeAt(0));
+        binary.push(nameCodes.length, ...nameCodes); // gradient name
+        binary.push(...int16(gradient.length)); // number of stops
+        for (let node of gradient){
+            binary.push(0, 0, ...int16(node.pos*4096)); // stop position 0..4096
+            binary.push(0, 0, 0, 50); // stop midpoint in %
+            binary.push(0, 0); // color model RGB
+            binary.push(...int16(node.r*0xFF), ...int16(node.g*0xFF), ...int16(node.b*0xFF), 0, 0); // color RGB
+            binary.push(0, 0); // color type user
+        }
+        binary.push(0, 0); // no transparency stops
+        binary.push(0, 0, 0, 0, 0, 0); // reserved
+
+        return new Int8Array(binary);
+    }
+
+}
+
+
 
 // list of supported code flavours
 codeFlavours = [
@@ -234,6 +268,7 @@ codeFlavours = [
     CodeFlavourFastLED,
     CodeFlavourSVG,
     CodeFlavourGimp,
+    CodeFlavourGRD,
 ]
 
 let codeFlavourDefault = 'code-css';
