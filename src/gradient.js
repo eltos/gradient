@@ -174,8 +174,8 @@ class Gradient extends Array {
 		// parse hash
 		let name = undefined;
 		if (hash.startsWith("#")) { hash = hash.substr(1); }
-		if (hash.includes('|')) {
-			[name, hash] = hash.split('|', 2);
+		if (hash.includes('=')) {
+			[name, hash] = hash.split('=', 2);
 			name = decodeURIComponent(name);
 		}
 		hash = hash.trim();
@@ -208,7 +208,7 @@ class Gradient extends Array {
 	 * @returns {string} hash
 	 */
 	hash(){
-		let hash = this.name ? this.name + '|' : '';
+		let hash = this.name ? this.name + '=' : '';
 		if (this.isDistributedEvenly()){
 			hash += this.map(x => x.colorHex).join("-");
 		} else {
