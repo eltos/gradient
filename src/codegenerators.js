@@ -196,6 +196,44 @@ class CodeFlavourSVG {
 }
 
 
+class CodeFlavourAndroidVectorDrawable {
+    static id = 'code-vector-drawable';
+    static title = 'Android';
+    static longTitle = 'Android vector drawable';
+    static language = 'language-xml'
+    static extension = 'xml'
+
+    static generate(gradient, name, comment) {
+        return "<gradient android:type=\"linear\" android:endX=\"1\">\n" +
+            (comment ? "    <!-- " + comment + " -->\n" : "") +
+            "    " + gradient.map(
+                x => "<item android:offset=\"" + x.pos.toFixed(3) +
+                    "\" android:color=\"#" + x.colorHex + "\" />"
+            ).join("\n    ") + "\n" +
+            "</gradient>";
+    }
+
+    static file(gradient, name, comment){
+        let codeBlock = this.generate(gradient, name, comment);
+        return tight(`
+            <?xml version="1.0" encoding="utf-8"?>
+            <vector xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:aapt="http://schemas.android.com/aapt"
+                    android:width="100dp"
+                    android:height="100dp"
+                    android:viewportWidth="1"
+                    android:viewportHeight="1">
+                <path android:pathData="M0,0 H1 V1 H0 Z">
+                    <aapt:attr name="android:fillColor">
+                        ${indent(6*4, codeBlock)}
+                    </aapt:attr>
+                </path>
+            </vector>
+        `)
+    }
+}
+
+
 class CodeFlavourGimp {
     static id = 'code-gimp';
     static title = 'GIMP';
@@ -265,9 +303,10 @@ class CodeFlavourGRD {
 // list of supported code flavours
 codeFlavours = [
     CodeFlavourCSS,
+    CodeFlavourSVG,
     CodeFlavourMatplotlib,
     CodeFlavourFastLED,
-    CodeFlavourSVG,
+    CodeFlavourAndroidVectorDrawable,
     CodeFlavourGimp,
     CodeFlavourGRD,
 ]
