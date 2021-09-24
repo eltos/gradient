@@ -170,6 +170,14 @@ function onLoad(){
 			if (e.key === 'Enter') {e.target.onclick(e);}
 		});
 	}
+	// syntax highlighting
+	try {
+		hljs.addPlugin({
+			'after:highlightElement': ({el, result}) => {
+				el.classList.remove('hljs');
+			}
+		});
+	} catch (e) {}
 
 	onHashChanged();
 }
@@ -258,6 +266,11 @@ function uiRefreshAll() {
 		// refresh contents
 		codeBox.textContent = flavour.generate(gradient, gradient.name || 'my_gradient',
 			"Edit this gradient at " + window.location.href);
+
+		// syntax highlighting
+		try {
+			hljs.highlightElement(codeBox);
+		} catch (e) {}
 	}
 	
 }

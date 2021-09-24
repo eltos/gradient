@@ -27,7 +27,7 @@ label {
 	font-weight: 700;
 }
 
-code {
+code, code * {
 	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 	font-size: 13px;
 }

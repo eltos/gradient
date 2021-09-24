@@ -199,7 +199,7 @@ class CodeFlavourSVG {
 class CodeFlavourGimp {
     static id = 'code-gimp';
     static title = 'GIMP';
-    static language;
+    static language = 'nohighlight';
     static extension = 'ggr'
 
     static generate(gradient, name, comment) {
@@ -230,6 +230,7 @@ class CodeFlavourGRD {
     static id = 'code-grd';
     static title = 'Photoshop';
     static longTitle = 'Photoshop GRD file';
+    static language = 'nohighlight';
     static extension = 'grd'
 
     static generate(gradient, name, comment) {
