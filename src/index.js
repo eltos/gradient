@@ -156,8 +156,8 @@ function applyGradient(){
 function onLoad(){
 	// HSV color picker
 	initPicker('picker', function (color) {
-		if (activeSliderElement === undefined) return;
 		let i = gradient.findIndex(x => x.slider === activeSliderElement);
+		if (i < 0 || i >= gradient.length) return;
 		gradient[i].color = color;
 		flowPauseHashUpdates = true;
 		applyGradient();
@@ -185,6 +185,7 @@ function onHashChanged(){
 		window.location.hash = "0:093391-33:019C5C-56:ABCD39-64:BFD336-77:B7D135-100:84CE34";
 		makeSnackbarNotification('Click on the bar to add anchors');
 	}
+	if (!gradient.includes(activeSliderElement)) pickerHide();
 	uiRefreshAll();
 }
 
