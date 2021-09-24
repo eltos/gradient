@@ -47,6 +47,7 @@ function sanitized(text){
 
 
 class CodeFlavourCSS {
+    // https://www.w3schools.com/css/css3_gradients.asp
     static id = 'code-css'; // html node id
     static title = 'CSS'; // tab title
     static longTitle = 'Cascading Style Sheets'; // tab tooltip
@@ -99,6 +100,7 @@ class CodeFlavourCSS {
 
 
 class CodeFlavourFastLED {
+    // https://github.com/FastLED/FastLED/wiki/Gradient-color-palettes
     static id = 'code-fastled';
     static title = 'FastLED';
     static language = 'language-ino'
@@ -125,6 +127,7 @@ class CodeFlavourFastLED {
 
 
 class CodeFlavourMatplotlib {
+    // https://matplotlib.org/stable/api/_as_gen/matplotlib.colors.LinearSegmentedColormap.html#matplotlib.colors.LinearSegmentedColormap.from_list
     static id = 'code-matplotlib';
     static title = 'Matplotlib';
     static longTitle = 'Python Matplotlib';
@@ -162,6 +165,7 @@ class CodeFlavourMatplotlib {
 
 
 class CodeFlavourSVG {
+    // https://www.w3schools.com/graphics/svg_grad_linear.asp
     static id = 'code-svg';
     static title = 'SVG';
     static longTitle = 'Scalable Vector Graphics';
@@ -197,6 +201,7 @@ class CodeFlavourSVG {
 
 
 class CodeFlavourAndroidVectorDrawable {
+    // https://developer.android.com/reference/android/graphics/drawable/VectorDrawable#gradient-support
     static id = 'code-vector-drawable';
     static title = 'Android';
     static longTitle = 'Android vector drawable';
@@ -235,6 +240,7 @@ class CodeFlavourAndroidVectorDrawable {
 
 
 class CodeFlavourGimp {
+    // https://gitlab.gnome.org/GNOME/gimp/blob/master/devel-docs/ggr.txt
     static id = 'code-gimp';
     static title = 'GIMP';
     static language = 'nohighlight';
