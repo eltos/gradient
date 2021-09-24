@@ -248,7 +248,7 @@ class CodeFlavourGRD {
             binary.push(0, 0, ...int16(node.pos*4096)); // stop position 0..4096
             binary.push(0, 0, 0, 50); // stop midpoint in %
             binary.push(0, 0); // color model RGB
-            binary.push(...int16(node.r*0xFF), ...int16(node.g*0xFF), ...int16(node.b*0xFF), 0, 0); // color RGB
+            binary.push(...int16(node.r*0x101), ...int16(node.g*0x101), ...int16(node.b*0x101), 0, 0); // color RGB
             binary.push(0, 0); // color type user
         }
         binary.push(0, 0); // no transparency stops
