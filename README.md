@@ -11,7 +11,8 @@ Supports code and file generation for
 [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics), 
 [Python Matplotlib](https://matplotlib.org), 
 [FastLED](http://fastled.io),
-[Android](https://developer.android.com/),
+[Android (Vector drawable)](https://developer.android.com/reference/android/graphics/drawable/VectorDrawable),
+[QML (QtQuick)](https://doc.qt.io/qt-5/qmlapplications.html),
 [Photoshop](https://www.adobe.com/products/photoshop.html) and 
 [GIMP](https://www.gimp.org).
 Feel free to open an issue or submit a merge request to support additional formats.

@@ -239,6 +239,40 @@ class CodeFlavourAndroidVectorDrawable {
 }
 
 
+class CodeFlavourQML {
+    // https://doc.qt.io/qt-5/qml-qtquick-gradient.html#orientation-prop
+    static id = 'code-qml';
+    static title = 'QML';
+    static longTitle = 'Qt Modeling Language (QtQuick)';
+    static language = 'language-qml'
+    static extension = 'qml'
+
+    static generate(gradient, name, comment) {
+        return "gradient: Gradient {\n" +
+            (comment ? "    /* " + comment + " */\n" : "") +
+            "    orientation: Gradient.Horizontal\n" +
+            "    " + gradient.map(
+                x => "GradientStop { position: " + x.pos.toFixed(3) +
+                    "; color: \"#" + x.colorHex + "\" }"
+            ).join("\n    ") + "\n" +
+            "}";
+    }
+
+    static file(gradient, name, comment){
+        let codeBlock = this.generate(gradient, name, comment);
+        return tight(`
+            import QtQuick 2.15
+
+            Rectangle {
+            
+                ${indent(4*4, codeBlock)}
+            
+            }
+        `)
+    }
+}
+
+
 class CodeFlavourGimp {
     // https://gitlab.gnome.org/GNOME/gimp/blob/master/devel-docs/ggr.txt
     static id = 'code-gimp';
@@ -313,6 +347,7 @@ codeFlavours = [
     CodeFlavourMatplotlib,
     CodeFlavourFastLED,
     CodeFlavourAndroidVectorDrawable,
+    CodeFlavourQML,
     CodeFlavourGimp,
     CodeFlavourGRD,
 ]
