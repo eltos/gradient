@@ -389,22 +389,6 @@ input:checked + .slider:before {
 	background: #eee;
 }
 
-.code-tabs .codebox .hint {
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	background: white;
-	color: black;
-	padding: 2px 4px;
-	border-top-left-radius: 5px;
-	border-bottom-right-radius: 4px;
-	opacity: 0%;
-	transition: .4s
-}
-
-.code-tabs .codebox:hover .hint {
-	opacity: 100%;
-}
 
 .code-tabs .tab-bar {
 	display: flex;
