@@ -462,76 +462,49 @@ header {
 
 #snackbar {
 	visibility: hidden;
-	min-width: 250px;
-	margin-left: -125px;
-	background-color: var(--color-background);
-	color: var(--color-text);
-	text-align: center;
-	border-radius: 2px;
-	padding: 16px;
 	position: fixed;
-	z-index: 100;
 	left: 50%;
-	bottom: 30px;
+	transform: translateX(-50%);
+	min-width: 250px;
+	max-width: 70vw;
+	margin-left: auto;
+	margin-right: auto;
+	z-index: 100;
+	background-color: var(--color-background);
+	padding: 16px;
+	border: solid 2px;
+	border-color: var(--color-background-slightshade);
+	border-radius: 2px;
+	text-align: center;
 	font-size: 17px;
+	color: var(--color-text);
 }
 
 #snackbar.show {
-	visibility: visible;
-	-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-	animation: fadein 0.5s, fadeout 0.5s 2.5s;
+	animation: fadein 0.5s both;
 }
 
-@-webkit-keyframes fadein {
-	from {
-		bottom: 0;
-		opacity: 0;
-	}
-	to {
-		bottom: 30px;
-		opacity: 1;
-	}
+#snackbar.hide {
+	animation: fadeout 0.5s both;
 }
 
 @keyframes fadein {
-	from {
-		bottom: 0;
-		opacity: 0;
-	}
-	to {
-		bottom: 30px;
-		opacity: 1;
-	}
+	from { bottom: 0; opacity: 0; visibility: visible; }
+	to { bottom: 30px;	opacity: 1;	visibility: visible; }
 }
-
-@-webkit-keyframes fadeout {
-	from {
-		bottom: 30px;
-		opacity: 1;
-	}
-	to {
-		bottom: 0;
-		opacity: 0;
-	}
-}
-
 @keyframes fadeout {
-	from {
-		bottom: 30px;
-		opacity: 1;
-	}
-	to {
-		bottom: 0;
-		opacity: 0;
-	}
+	from { bottom: 30px; opacity: 1; visibility: visible; }
+	to { bottom: 0; opacity: 0; visibility: hidden; }
 }
 
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
+/*
+ * Disable spinner buttons
+ */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
 	-webkit-appearance: none;
 	margin: 0;
 }
-
 input[type=number] {
 	-moz-appearance: textfield;
 }
