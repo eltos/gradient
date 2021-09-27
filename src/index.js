@@ -250,7 +250,7 @@ function uiRefreshAll() {
 
 			// create tab button
 			let button = document.createElement('button');
-			button.classList.add('tab-bar-button', 'codestyle');
+			button.classList.add('tab-bar-button', 'codestyle', 'reactive');
 			if (flavour.id === codeFlavourDefault) { button.classList.add('selected'); }
 			button.innerHTML = flavour.title;
 			button.title = flavour.longTitle || flavour.title;

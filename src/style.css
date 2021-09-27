@@ -1,8 +1,41 @@
 
+
+:root {
+	--color-text: #333;
+	--color-background: #fff;
+	--color-background-slightshade: #eee;
+	--color-background-shade: #ddd;
+	--color-background-button: #ccc;
+	--color-background-translucent: #fff8;
+	--color-border: #666;
+	--color-accent: #2196F3;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-text: #ccc;
+		--color-background: #222;
+		--color-background-slightshade: #333;
+		--color-background-shade: #444;
+		--color-background-button: #555;
+		--color-background-translucent: #2228;
+		--color-border: #555;
+	}
+}
+
+
+
+
+
+
+
+
+
+
 * {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 500;
-	color: #333;
+	color: var(--color-text);
 }
 
 body {
@@ -10,9 +43,12 @@ body {
 	flex-flow: column;
 	overflow-x: hidden;
 	font-size: 14px;
+	background: var(--color-background);
 }
 
-html, body, main {
+html,
+body,
+main {
 	height: 100%;
 	margin: 0px;
 	overflow-x: hidden;
@@ -119,7 +155,7 @@ header {
 	margin-top: 60px;
 	margin-bottom: 100px;
 	border-style: groove;
-	border-color: white;
+	border-color: var(--color-background);
 	border-radius: 5px;
 	border-width: 3px;
 	transform: translateX(-3px);
@@ -155,7 +191,8 @@ header {
 .gradient .bar #gradient:focus-visible::after {
 	position: absolute;
 	content: "Add new anchor";
-	background: white;
+	background: var(--color-background);
+	color: var(--color-text);
 	padding: 3px;
 }
 
@@ -164,7 +201,7 @@ header {
 	width: 6px;
 	height: 50px;
 	border-style: groove;
-	border-color: white;
+	border-color: var(--color-background);
 	border-width: 3px;
 	border-radius: 10px;
 	transform: translate(-6px, -3px);
@@ -185,10 +222,11 @@ header {
 	border-style: solid;
 	border-radius: 25px;
 	border-width: 2px;
-	border-color: lightgrey;
+	border-color: var(--color-background-shade);
 	text-align: center;
 	font-size: medium;
-	color: black;
+	background: var(--color-background);
+	color: var(--color-text);
 }
 
 .gradient .bar .slider-input-p {
@@ -236,7 +274,7 @@ header {
 	width: 96%;
 	padding: 2%;
 	height: max-content;
-	background: white;
+	background: var(--color-background);
 }
 
 @media only screen and (min-width: 700px) {
@@ -263,7 +301,7 @@ header {
 	gap: 10px;
 }
 
-.switch {
+.gradient .control .switch {
 	vertical-align: middle;
 	position: relative;
 	display: inline-block;
@@ -272,70 +310,89 @@ header {
 	margin: 2px;
 }
 
-.button {
+.gradient .control .button {
 	height: 25px;
 	margin: 2px;
 }
 
-.input {
-	margin: 2px;
-	height: 20px;
+.gradient .control .settings button {
+	background-color: var(--color-background-button);
+	border-color: var(--color-background-shade);
+	border-radius: 4px;
+	border-style: solid;
+	padding: 0px 5px;
 }
 
-.switchlabel {
+.gradient .control .settings button:hover {
+	background-color: var(--color-background-shade);
+}
+
+.gradient .control .settings button:hover:active {
+	background-color: var(--color-background-slightshade);
+}
+
+
+.gradient .control input {
+	background-color: var(--color-background);
+	border-color: var(--color-background-shade);
+	border-radius: 4px;
+	border-style: solid;
+}
+
+.gradient .control .switchlabel {
 	display: inline;
 	vertical-align: middle;
 }
 
-.switch input {
+.gradient .control .switch input {
 	opacity: 0;
 	width: 0;
 	height: 0;
 }
 
-.switch .slider {
+.gradient .control .switch .slider {
 	position: absolute;
 	cursor: pointer;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #ccc;
+	background-color: var(--color-background-button);
 	-webkit-transition: .4s;
 	transition: .4s;
 }
 
-.switch .slider:before {
+.gradient .control .switch .slider:before {
 	position: absolute;
 	content: "";
 	height: 17px;
 	width: 17px;
 	left: 4px;
 	bottom: 4px;
-	background-color: white;
+	background-color: var(--color-background);
 	-webkit-transition: .4s;
 	transition: .4s;
 }
 
-input:checked + .slider {
-	background-color: #2196F3;
+.gradient .control input:checked + .slider {
+	background-color: var(--color-accent);
 }
 
-input:focus + .slider {
-	box-shadow: 0 0 1px #2196F3;
+.gradient .control input:focus + .slider {
+	box-shadow: 0 0 1px var(--color-accent);
 }
 
-input:checked + .slider:before {
+.gradient .control input:checked + .slider:before {
 	-webkit-transform: translateX(24px);
 	-ms-transform: translateX(24px);
 	transform: translateX(24px);
 }
 
-.switch .slider.round {
+.gradient .control .switch .slider.round {
 	border-radius: 34px;
 }
 
-.switch .slider.round:before {
+.gradient .control .switch .slider.round:before {
 	border-radius: 50%;
 }
 
@@ -346,29 +403,21 @@ input:checked + .slider:before {
 
 
 .code-tabs .codestyle {
-	background: #fff;
-	color: #999;
+	background: var(--color-background-slightshade);
+	color: var(--color-text);
 	border-style: solid;
-	border-color: #999;
+	border-color: var(--color-border);
 	border-width: 2px;
 	border-radius: 5px;
 	transition: .4s
 }
 
+.code-tabs .codestyle:hover {
+	background: var(--color-background-shade);
+}
+
 .code-tabs .codestyle.selected {
-	background: #eee;
-	color: #000;
-	border-color: #666;
-	border-color: gray;
-}
-
-.code-tabs .codestyle:hover, .code-tabs .codestyle:focus {
-	background: #eee;
-	color: #000;
-}
-
-.code-tabs .codestyle.selected:hover {
-	background: #ddd;
+	opacity: 100%;
 }
 
 .code-tabs .codebox {
@@ -383,10 +432,6 @@ input:checked + .slider:before {
 	overflow-x: auto;
 	background-color: transparent;
 	border: none;
-}
-
-.code-tabs .codebox:hover {
-	background: #eee;
 }
 
 
@@ -419,8 +464,8 @@ input:checked + .slider:before {
 	visibility: hidden;
 	min-width: 250px;
 	margin-left: -125px;
-	background-color: #333;
-	color: #fff;
+	background-color: var(--color-background);
+	color: var(--color-text);
 	text-align: center;
 	border-radius: 2px;
 	padding: 16px;
@@ -559,7 +604,7 @@ input[type=number] {
 	width: calc(100% - 20px);
 	bottom: 0px;
 	padding: 5px 10px;
-	background: #FFF8;
+	background: var(--color-background-translucent);
 	font-size: medium;
 	pointer-events: none;
 }
@@ -574,7 +619,7 @@ input[type=number] {
 
 
 .footertext {
-	background: #eeeeee;
+	background: var(--color-background-slightshade);
 	padding: 10px;
 	text-align: center;
 }

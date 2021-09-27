@@ -4,15 +4,31 @@
  */
 
 .picker {
+    --color-background: white;
+    --color-border: lightgray;
+    --color-contrast: black;
+}
+
+@media (prefers-color-scheme: dark) {
+    .picker {
+        --color-background: #222;
+        --color-border: #444;
+    }
+}
+
+
+
+
+.picker {
     position: absolute;
     transform: translateX(calc(-50% - 10px));
-    background:white;
+    background: var(--color-background);
     padding: 5px;
     margin: 10px;
     border-style: solid;
     border-radius: 5px;
     border-width: 2px;
-    border-color: lightgrey;
+    border-color: var(--color-border);
     z-index: 999;
 }
 
@@ -36,7 +52,7 @@
     margin: 25px;
     width: calc(100% - 50px);
     height: calc(100% - 50px);
-    background: white;
+    background: var(--color-background);
     border-radius: 100%;
 }
 
@@ -58,7 +74,7 @@
     background: transparent;
     border-style: solid;
     border-width: 3px;
-    border-color: black;
+    border-color: var(--color-contrast);
     border-radius: 100%;
     z-index: 1001;
 }
