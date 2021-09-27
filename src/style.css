@@ -89,7 +89,6 @@ header {
  */
 
 .gradient {
-	min-height: 100%;
 	position: relative;
 	padding-top: 10px;
 }
@@ -242,6 +241,7 @@ header {
 
 @media only screen and (min-width: 700px) {
 	.gradient {
+		min-height: calc(100% - 10px - 10px);
 		padding-bottom: 10px;
 	}
 	.gradient .control {
