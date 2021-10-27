@@ -48,10 +48,7 @@ function createSliderElement(){
 	Object.assign(slider.input_col, {title: "Anchor color (hex)",
 		type: "text", pattern:"[0-9A-Fa-f]{6}"});
 	slider.input_col.addEventListener("change", function(event) {
-		let s = event.target.value;
-		if (s.startsWith('#')) s = s.substr(1);
-		if (s.length <= 3) s = Array.from(s).map(x => x+x).join("");
-		actionChange(event.target.slider, 'color', parseInt(s, 16))});
+		actionChange(event.target.slider, 'color', parseColorString(event.target.value))});
 	slider.input_col.addEventListener('focus', function (event) {
 		activeSliderElement = event.target.slider;
 		pickerSetColor(parseInt(event.target.value, 16));
@@ -83,6 +80,25 @@ function updateSlider(slider, node){
 	slider.circle.style.background = "#"+node.colorHex;
 	slider.input_pos.value = Math.round(node.pos*1000)/10;
 	slider.input_col.value = node.colorHex;
+}
+
+
+function parseColorString(s){
+	// remove whitespaces
+	s = s.trim();
+	let m;
+	// hex color, e.g. #ABC or #ABCDEF or 0x123456
+	m = s.match(/^[#x]?((?<RRGGBB>[0-9A-Fa-f]{4,6})|(?<RGB>[0-9A-Fa-f]{0,3}))$/);
+	if (m && m.groups.RRGGBB) return parseInt(m.groups.RRGGBB, 16);
+	if (m && m.groups.RGB) return parseInt(Array.from(m.groups.RGB).map(x => x+x).join(""), 16);
+	// 3 bytes, e.g. 255,128,0
+	m = s.match(/^(?<R>\d{0,3})[,; ](?<G>\d{0,3})[,; ](?<B>\d{0,3})$/);
+	if (m) return (parseInt(m.groups.R) << 16) + (parseInt(m.groups.G) << 8) + (parseInt(m.groups.B) << 0);
+	// 3 floats, e.g. 0.1,.3,.5
+	m = s.match(/^(?<R>\d*\.?\d*)[,; ](?<G>\d*\.?\d*)[,; ](?<B>\d*\.?\d*)$/);
+	if (m) return (255*parseFloat(m.groups.R) << 16) + (255*parseFloat(m.groups.G) << 8) + (255*parseFloat(m.groups.B) << 0);
+	// fallback
+	return 0;
 }
 
 
