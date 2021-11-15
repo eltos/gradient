@@ -27,6 +27,7 @@
 	<h1 class="title">Color gradient gallery</h1>
 	
 	<div class="menu">
+		<a title="Clear favourites" onclick="clearFavourites()" class="emoji">&#x1f5d1;&#xfe0f;</a>
 		<a title="Visit repository" href="https://github.com/eltos/gradient" class="emoji">&#x2139;&#xfe0f;</a>
 	</div>
 
@@ -35,17 +36,22 @@
 <main>
 
 
-<div id="gradient-box-table">
-</div>
+	<div id="gradient-box-table">
+	</div>
 
+	<div id="gradient-box-hint" class="hint">
+		This is your personal gallery, a place to save your favourite color gradients.<br/>
+		Favourites are stored in your browser's local storage.
+		<br/><br/>
+		<a href="javascript:void(0)" onclick="addDefaultFavourites()">Click to add example gradients</a>
+	</div>
 
 
 </main>
 
 <footer>
 <div class="footertext">
-	<span class="emoji">&#x1F36A;&#xfe0f;</span> This page uses cookies to store your favourite gradients in your browser.
-	If you disagree to the use of cookies, you can <a href="#" onclick="clearFavourites()">remove</a> all cookies or <a href="#" onclick="setDefaultFavourites()">restore</a> the defaults.
+
 </div>
 </footer>
 

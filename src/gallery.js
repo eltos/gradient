@@ -4,45 +4,32 @@
  *
  */
 
-function getCookie(name){
-	let raw = document.cookie.split(";").map(x => x.split("=")).find(x => x[0].trim() === name);
-	return raw === undefined ? undefined : decodeURIComponent(raw[1]);
-}
-
-function setCookie(name, value){
-	if (value === undefined){
-		document.cookie = name + "=;SameSite=strict;expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-	} else {
-		document.cookie = name + "=" + encodeURIComponent(value) + ";SameSite=strict;";
-	}
-}
-
 function hasFavourites(){
-	return getCookie("favs") !== undefined;
+	return getFavourites().length > 0;
 }
 
 function getFavourites(){
-	let raw = getCookie("favs");
-	return raw === undefined || raw.trim() === "" ? [] : raw.split(",");
+	return JSON.parse(window.localStorage.getItem('favs')) || [];
 }
 
 function setFavourites(list){
-	setCookie("favs", list.join(","));
-	populateGallery();
+	window.localStorage.setItem('favs', JSON.stringify(list));
 }
 
 function clearFavourites(){
-	setFavourites([]);
-	
-	makeSnackbarNotification("Favourites cleared");
+	if (confirm('Remove all favourite gradients?')) {
+		window.localStorage.removeItem('favs');
+		makeSnackbarNotification("Favourites cleared");
+		populateGallery();
+	}
 }
 
 function addFavourite(hash){
 	let favs = getFavourites();
 	favs.unshift(hash);
 	setFavourites(favs);
-	
 	makeSnackbarNotification("Added to favourites");
+	populateGallery();
 }
 
 function removeFavourite(hash){
@@ -50,11 +37,13 @@ function removeFavourite(hash){
 		let favs = getFavourites();
 		favs.splice(favs.indexOf(hash), 1);
 		setFavourites(favs);
+		populateGallery();
 	}
 }
 
-function setDefaultFavourites(){
-	setFavourites([
+function addDefaultFavourites(){
+	let favs = getFavourites();
+	favs = favs.concat([
 		"F5515F-A1051D",
 		"B3EB50-429421",
 		"0FF0B3-036ED9",
@@ -67,6 +56,8 @@ function setDefaultFavourites(){
 		"Plasma=0C0786-6A00A7-AF2890-E06461-FCA635-EFF821",
 		"gist ncar=0:000080-5.1:005F05-5.6:005E0C-10.7:0000FF-15.8:00B7FF-21.4:00FEFD-26.5:00FA9D-32.1:01FE00-37.2:62CE00-42.9:80FF01-53.6:FFFD00-64.3:FFB50E-68.4:FF5C03-75:FF0008-80.1:FF00FC-85.7:9E33FE-90.8:ED81EE-100:FCECFC"
 	]);
+	setFavourites(favs);
+	populateGallery();
 }
 
 
@@ -112,12 +103,8 @@ function createGalleryElement(hash, tmp=false){
 
 function populateGallery(){
 	
-	// default favourites
-	if (!hasFavourites()){
-		setDefaultFavourites();
-		makeSnackbarNotification("Save your favourite gradients here.<br/>They are stored locally in your browser.");
-		return;
-	}
+	// hint with option to add example favourites
+	document.getElementById("gradient-box-hint").style.display = hasFavourites() ? "none" : "";
 	
 	// populate table
 	let newhash = Gradient.fromHash(window.location.hash).hash();

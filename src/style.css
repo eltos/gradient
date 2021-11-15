@@ -586,7 +586,12 @@ input[type=number] {
 	opacity: 100%;
 }
 
-
+.hint {
+	color: var(--color-text);
+	font-size: medium;
+	padding: 10px;
+	text-align: center;
+}
 
 
 
