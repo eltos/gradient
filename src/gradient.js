@@ -232,6 +232,39 @@ class Gradient extends Array {
 	}
 
 	/**
+	 * Returns a copy of this gradient
+	 *
+	 * @returns {Gradient} a copy of this
+	 */
+	copy(){
+		let copy = new Gradient(...this)
+		copy.name = gradient.name;
+		return copy;
+	}
+
+	/**
+	 * Returns a copy of this gradient padded with nodes at start and end
+	 *
+	 * @returns {Gradient} this gradient
+	 */
+	padded(){
+		let first = this[0] || new Node(1),
+			last = this[this.length-1] || new Node();
+		if (this.length <= 1){
+			return new Gradient(new Node(0, first.color), new Node(1, first.color))
+		}
+		let gradient = this.copy()
+		if (first.pos > 0) {
+			gradient.push(new Node(0, first.color))
+		}
+		if (last.pos < 1) {
+			gradient.push(new Node(1, last.color));
+		}
+		gradient.sort();
+		return gradient
+	}
+
+	/**
 	 * Sort the nodes of this color gradient in place
 	 *
 	 * @returns {Array} this gradient

@@ -109,7 +109,7 @@ class CodeFlavourFastLED {
     static generate(gradient, name, comment) {
         return "DEFINE_GRADIENT_PALETTE( " + sanitized(name) + " ){\n" +
             (comment ? "    /* " + comment + " */\n" : "") +
-            "    " + gradient.map(
+            "    " + gradient.padded().map(
                 x => x.pos255.toString().padStart(3, " ") + ",  "
                     + x.rgb.map(v => v.toString().padStart(3, " ")).join(", ")
             ).join(",\n    ") + "};";
@@ -137,7 +137,7 @@ class CodeFlavourMatplotlib {
     static generate(gradient, name, comment) {
         return "LinearSegmentedColormap.from_list('" + name + "', (\n" +
             (comment ? "    # " + comment + "\n" : "") +
-            "    " + gradient.map(
+            "    " + gradient.padded().map(
                 x => "(" + x.pos.toFixed(3) + ", "
                     + "(" + x.rgb.map(v => (v / 255).toFixed(3)).join(", ") + "))"
             ).join(",\n    ") + "))";
@@ -281,6 +281,7 @@ class CodeFlavourGimp {
     static extension = 'ggr'
 
     static generate(gradient, name, comment) {
+        gradient = gradient.padded()
         let raw = "GIMP Gradient\n" +
             "Name: " + name + "\n" +
             (gradient.length - 1) + "\n";
