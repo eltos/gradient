@@ -510,6 +510,52 @@ input[type=number] {
 }
 
 
+/*
+ *  Popup window
+ */
+
+
+.popup-back {
+	display: none;
+	position: fixed;
+	z-index: 999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.7);
+	overflow: auto;
+}
+
+.popup {
+	background-color: var(--color-background);
+	margin: 15% auto auto auto;
+	padding: 20px;
+	border: 2px solid var(--color-border);
+	border-radius: 5px;
+	max-width: calc(min(1000px, 80%));;
+}
+
+.popup ul {
+	padding-left: 20px;
+}
+
+
+.close {
+	position: relative;
+	float: right;
+	width: 30px;
+	height: 30px;
+	border-radius: 5px;
+	text-align: center;
+	font-size: x-large;
+	font-weight: bold;
+	cursor: pointer;
+}
+.close:hover {
+	background: var(--color-background-shade);
+}
+
 
 /*
  *  Gallery

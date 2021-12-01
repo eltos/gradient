@@ -42,7 +42,7 @@
 		<div title="Copy permalink" onclick="copyLink();" class="emoji clickable">&#x1f517;&#xfe0f;</div>
 		<div title="Undo" onclick="window.history.back();" class="emoji clickable">&#x21a9;&#xfe0f;</div>
 		<div title="Redo" onclick="window.history.forward();" class="emoji clickable">&#x21aa;&#xfe0f;</div>
-		<a title="Visit repository" href="https://github.com/eltos/gradient" class="emoji">&#x2139;&#xfe0f;</a>
+		<div title="About" onclick="aboutShow()" class="emoji">&#x2139;&#xfe0f;</div>
 	</div>
 
 </header>
@@ -108,6 +108,50 @@
 			
 		</div>
 	</div>
+
+
+
+	<div id="about" class="popup-back" onclick="aboutDismiss()">
+		<div class="popup">
+			<div class="close" onclick="aboutDismiss()">&times;</div>
+			<div>
+				<h1>About</h1>
+				<p>A color gradient designer to help you create awesome gradients for your projects</p>
+
+				<ul>
+					<li>Add color nodes by clicking the bar</li>
+					<li>Adjust node positions via drag & drop or the input field (value in percent)</li>
+					<li>Select colors with the picker or input field</li>
+					<li>Copy the generated code or download it as file</li>
+				</ul>
+
+				Use <span class="emoji">&#x2b50;&#xfe0f;</span> to access a personal gallery which allows you to store your favourite gradients locally in your browser.
+				Gradients can also be shared by the URL.
+			</div>
+
+			<div>
+				<p style="font-weight: bold">Did you know?</p>
+				<ul>
+					<li>The color input field accepts not only hex values (e.g. <code>#F80</code>, <code>FE5310</code> or <code>0x2f67a8</code>), but also RGB color triples like <code>255,128,0</code> or <code>0.1,0.5,1</code></li>
+					<li>Changes can be undone and redone with browser navigation or <span class="emoji">&#x21a9;&#xfe0f;</span> and <span class="emoji">&#x21aa;&#xfe0f;</span> </li>
+					<li>You can name a gradient with the field below the code output (e.g. for the gallery)</li>
+				</ul>
+			</div>
+
+			<div>
+				<h2>Find this project on GitHub</h2>
+				This open source project is available on GitHub:
+				<a href="https://github.com/eltos/gradient">github.com/eltos/gradient</a>
+				<p>
+					<a href="https://github.com/eltos/gradient"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/eltos/gradient?style=social"></a>
+				</p>
+
+			</div>
+
+		</div>
+	</div>
+
+
 
 </main>
 

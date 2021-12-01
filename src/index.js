@@ -207,7 +207,7 @@ function onHashChanged(){
 	if (gradient.length === 0){
 		// redirect to default gradient
 		window.location.hash = "0:093391-33:019C5C-56:ABCD39-64:BFD336-77:B7D135-100:84CE34";
-		makeSnackbarNotification('Click on the bar to add anchors');
+		makeSnackbarNotification('Click <span class="emoji">&#x2139;&#xfe0f;</span> for usage help');
 	}
 	if (!gradient.includes(activeSliderElement)) pickerHide();
 	uiRefreshAll();
@@ -331,3 +331,10 @@ function openTab(id, activeButton){
 	
 }
 
+
+function aboutShow(){
+	document.getElementById("about").style.display = "block";
+}
+function aboutDismiss(){
+	document.getElementById("about").style.display = "none";
+}
