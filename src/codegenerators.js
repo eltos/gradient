@@ -164,6 +164,144 @@ class CodeFlavourMatplotlib {
 }
 
 
+class CodeFlavourPlotlyPy {
+    //
+    static id = 'code-plotly.py';
+    static title = 'Plotly.py';
+    static longTitle = 'Plotly Python Open Source Graphing Library';
+    static language = 'language-python'
+    static extension = 'ipynb' //'py'
+
+    static generate(gradient, name, comment) {
+        return `${sanitized(name)} = [\n` +
+            (comment ? "    # " + comment + "\n" : "") +
+            "    " + gradient.padded().map(
+                x => `[${x.pos.toFixed(3)}, '#${x.colorHex}']`
+            ).join(",\n    ") + "]";
+    }
+
+    static file(gradient, name, comment){
+        let codeBlock = this.generate(gradient, name, comment);
+        /*
+        // standalone python file
+        return tight(`
+            #!/usr/bin/env python
+            
+            ${indent(3*4, codeBlock)}
+            
+            
+            if __name__ == '__main__':
+                import numpy as np
+                import plotly.express as px
+                from plotly.offline import plot
+                
+                fig = px.imshow([np.arange(1000)], aspect='auto', color_continuous_scale=${sanitized(name)})
+                plot(fig)
+        `)
+        */
+        // jupyter notebook
+        return tight(`
+            {
+             "cells": [
+              {
+               "cell_type": "code",
+               "execution_count": null,
+               "metadata": {},
+               "outputs": [],
+               "source": [
+                ${indent(3*4+4, codeBlock.split('\n').map(line => '"'+line+'\\n"').join(",\n"))}
+               ]
+              },
+              {
+               "cell_type": "code",
+               "execution_count": null,
+               "metadata": {},
+               "outputs": [],
+               "source": [
+                "import numpy as np\\n",
+                "import plotly.express as px\\n",
+                "\\n",
+                "px.imshow([np.arange(1000)], aspect='auto', color_continuous_scale=${sanitized(name)})"
+               ]
+              }
+             ],
+             "metadata": {
+              "kernelspec": {
+               "display_name": "Python 3",
+               "language": "python",
+               "name": "python3"
+              },
+              "language_info": {
+               "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+               },
+               "file_extension": ".py",
+               "mimetype": "text/x-python",
+               "name": "python"
+              }
+             },
+             "nbformat": 4,
+             "nbformat_minor": 4
+            }
+        `)
+
+    }
+}
+
+
+class CodeFlavourPlotlyJs {
+    // https://plotly.com/javascript/reference/#heatmapgl-colorscale
+    static id = 'code-plotly.js';
+    static title = 'Plotly.js';
+    static longTitle = 'Plotly JavaScript Open Source Graphing Library';
+    static language = 'language-js'
+    static extension = 'html'
+
+    static generate(gradient, name, comment) {
+        return `let ${sanitized(name)} = [\n` +
+            (comment ? "    // " + comment + "\n" : "") +
+            "    " + gradient.padded().map(
+                x => `[${x.pos.toFixed(3)}, '#${x.colorHex}']`
+            ).join(",\n    ") + "]";
+    }
+
+    static file(gradient, name, comment){
+        let codeBlock = this.generate(gradient, name, comment);
+        return tight(`
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <title>${name}</title>
+                <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+                <script>
+                
+                    ${indent(5 * 4, codeBlock)}
+            
+                    var data = [
+                      {
+                        z: [[...Array(1000).keys()]],
+                        colorscale: ${sanitized(name)},
+                        type: 'heatmap'
+                      }
+                    ];
+                    
+                    window.onload = function(){Plotly.newPlot('chart', data);}    
+                
+                </script>
+            </head>
+            
+            <body>
+                <div id="chart"></div>
+            </body>
+            </html>
+        `)
+
+    }
+}
+
+
 class CodeFlavourSVG {
     // https://www.w3schools.com/graphics/svg_grad_linear.asp
     static id = 'code-svg';
@@ -345,6 +483,8 @@ class CodeFlavourGRD {
 codeFlavours = [
     CodeFlavourCSS,
     CodeFlavourSVG,
+    CodeFlavourPlotlyJs,
+    CodeFlavourPlotlyPy,
     CodeFlavourMatplotlib,
     CodeFlavourFastLED,
     CodeFlavourAndroidVectorDrawable,
