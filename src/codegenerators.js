@@ -35,7 +35,7 @@ function hexdump(int8array){
 }
 
 /**
- * sanitizes a string to be a valid variable name
+ * sanitizes a string to be a valid variable/file/identifier
  */
 function sanitized(text){
     return text.replaceAll(/[^\w]/g,'_');
@@ -88,11 +88,11 @@ class CodeFlavourCSS {
         let codeBlock = this.generate(gradient, name, comment);
         return tight(`
             :root {
-              --${name}: ${indent(3*4+4, codeBlock)};
+              --${sanitized(name)}: ${indent(3*4+4, codeBlock)};
             }
             
             html {
-              background: var(--${name});
+              background: var(--${sanitized(name)});
             }
         `)
     }
@@ -150,14 +150,14 @@ class CodeFlavourMatplotlib {
             
             from matplotlib.colors import LinearSegmentedColormap
             
-            ${name} = ${indent(3*4+2+name.length, codeBlock)}
+            ${sanitized(name)} = ${indent(3*4+2+sanitized(name).length, codeBlock)}
             
             
             if __name__ == '__main__':
                 import numpy as np
                 from matplotlib import pyplot as plt
                 
-                plt.imshow([np.arange(1000)], aspect="auto", cmap=${name})
+                plt.imshow([np.arange(1000)], aspect="auto", cmap=${sanitized(name)})
                 plt.show()
         `)
     }
