@@ -19,6 +19,9 @@ Supports code and file generation for
 
 Feel free to open an issue or submit a merge request to support additional formats.
 
+| [🪙 DONATE](https://github.com/sponsors/eltos) | [❤️ SAY THANKS](https://saythanks.io/to/eltos)
+|-|-|
+
 
 -------------------
 
