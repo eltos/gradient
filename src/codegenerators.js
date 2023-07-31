@@ -444,6 +444,7 @@ class CodeFlavourGimp {
 
 
 class CodeFlavourGRD {
+    // http://www.selapa.net/swatches/gradients/fileformats.php
     static id = 'code-grd';
     static title = 'Photoshop';
     static longTitle = 'Photoshop GRD file';
