@@ -10,12 +10,14 @@ You can share the gradients as URL and save your favourites in a personal galler
 Supports code and file generation for 
 - [CSS](https://en.wikipedia.org/wiki/CSS)
 - [SVG](https://en.wikipedia.org/wiki/Scalable_Vector_Graphics)
+- [Plotly](https://plotly.com/)
 - [Python Matplotlib](https://matplotlib.org)
+- [Typst](https://typst.app)
 - [FastLED](http://fastled.io)
 - [Android (Vector drawable)](https://developer.android.com/reference/android/graphics/drawable/VectorDrawable)
 - [QML (QtQuick)](https://doc.qt.io/qt-5/qmlapplications.html)
-- [Photoshop](https://www.adobe.com/products/photoshop.html)
 - [GIMP](https://www.gimp.org)
+- [Photoshop](https://www.adobe.com/products/photoshop.html)
 
 Feel free to open an issue or submit a merge request to support additional formats.
 
