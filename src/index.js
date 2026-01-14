@@ -280,7 +280,7 @@ function uiRefreshAll() {
 		}
 
 		// refresh contents
-		codeBox.textContent = flavour.generate(gradient, gradient.name || 'my_gradient',
+		codeBox.textContent = flavour.generate(gradient, gradient.name || 'my gradient',
 			"Edit this gradient at " + window.location.href);
 
 		// syntax highlighting
@@ -316,9 +316,9 @@ function downloadCode(){
 	let codeBoxes = document.getElementsByClassName('code');
 	let visibleCodeBox = Array.from(codeBoxes).find(x => x.offsetParent);
 	let flavour = codeFlavours.find(x => x.id === visibleCodeBox.id);
-	let contents = flavour.hasOwnProperty("file") ? flavour.file(gradient, gradient.name || 'my_gradient',
+	let contents = flavour.hasOwnProperty("file") ? flavour.file(gradient, gradient.name || 'my gradient',
 		"Edit this gradient at " + window.location.href) : visibleCodeBox.textContent;
-	downloadVirtualFile(gradient.name || 'my_gradient', flavour.extension, contents);
+	downloadVirtualFile(gradient.name || 'my gradient', flavour.extension, contents);
 }
 
 
