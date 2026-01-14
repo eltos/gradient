@@ -37,8 +37,8 @@ function hexdump(int8array){
 /**
  * sanitizes a string to be a valid variable/file/identifier
  */
-function sanitized(text){
-    return text.replaceAll(/[^\w]/g,'_');
+function sanitized(text, replacement='_'){
+    return text.replaceAll(/[^\w]/g, replacement);
 }
 
 
@@ -247,6 +247,38 @@ class CodeFlavourPlotlyPy {
         `)
 
     }
+}
+
+
+class CodeFlavourTypst {
+  // https://typst.app/docs/reference/visualize/gradient/
+  static id = 'code-typst';
+  static title = 'Typst';
+  static longTitle = 'Typst markup';
+  static language = 'language-stylus' // use similar syntax highlighting until typst is supported
+  static extension = 'typ'
+
+  static generate(gradient, name, comment) {
+    if (gradient.length === 0) {
+      return `#let ${sanitized(name)} = none`;
+    } else if (gradient.length === 1) {
+      return `#let ${sanitized(name)} = rgb("#${gradient[0].colorHex}")`;
+    } else {
+      return `#let ${sanitized(name, '-')} = gradient.linear(\n` +
+        (comment ? "  // " + comment + "\n" : "") +
+        "  " + gradient.padded().map(
+          x => `(rgb("#${x.colorHex}"), ${x.posPercent})`
+        ).join(",\n  ") + ",\n" +
+        "  space: rgb,\n" +
+        ")";
+    }
+  }
+
+  static file(gradient, name, comment){
+    let codeBlock = this.generate(gradient, name, comment);
+    return codeBlock + "\n\n" +
+      `#rect(fill: ${sanitized(name, '-')}, width: 100%)\n`;
+  }
 }
 
 
@@ -487,6 +519,7 @@ codeFlavours = [
     CodeFlavourPlotlyJs,
     CodeFlavourPlotlyPy,
     CodeFlavourMatplotlib,
+    CodeFlavourTypst,
     CodeFlavourFastLED,
     CodeFlavourAndroidVectorDrawable,
     CodeFlavourQML,
