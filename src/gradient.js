@@ -296,7 +296,7 @@ class Gradient extends Array {
    */
   copy() {
     const copy = new Gradient(...this)
-    copy.name = gradient.name;
+    copy.name = this.name;
     return copy;
   }
 

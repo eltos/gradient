@@ -86,11 +86,11 @@ class CodeFlavourCSS {
     const codeBlock = this.generate(gradient, name, comment);
     return tight(`
             :root {
-              --${sanitized(name)}: ${indent(3 * 4 + 4, codeBlock)};
+                --${sanitized(name)}: ${indent(3 * 4 + 4, codeBlock)};
             }
             
             html {
-              background: var(--${sanitized(name)});
+                background: var(--${sanitized(name)});
             }
         `)
   }
@@ -148,7 +148,7 @@ class CodeFlavourMatplotlib {
             
             from matplotlib.colors import LinearSegmentedColormap
             
-            ${sanitized(name)} = ${indent(3 * 4 + 2 + sanitized(name).length, codeBlock)}
+            ${sanitized(name)} = ${indent(3 * 4, codeBlock)}
             
             
             if __name__ == '__main__':
