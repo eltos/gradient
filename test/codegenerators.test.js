@@ -1,4 +1,27 @@
 
+describe('dedent', () => {
+  it('test 1', () => {
+    const output = dedent`
+      ${42}
+    `
+    expect(output).toBe("42\n");
+  });
+
+  it('test 2', () => {
+    const output = dedent`
+      func(${1+1},
+        ${"x"} = ${"[\n  A,\n  B\n]"}
+      )
+    `
+    expect(output).toBe(
+      "func(2,\n" +
+      "  x = [\n" +
+      "    A,\n" +
+      "    B\n" +
+      "  ]\n" +
+      ")\n");
+  });
+});
 
 describe('CodeFlavourCSS', () => {
   it('generate', () => {

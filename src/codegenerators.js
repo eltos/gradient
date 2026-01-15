@@ -5,23 +5,36 @@
 
 
 /**
- * Indents the given multi-line string
- */
-function indent(n, string, firstLine = false) {
-  return string.split("\n").map(x => "".padStart(n, " ") + x)
-    .join("\n").substring(firstLine ? 0 : n);
-}
-
-/**
  * Removes leading indent from multi-line string preserving relative indents
  */
-function tight(string) {
-  let lines = string.split("\n");
-  while (lines.length > 0 && lines[0].trim() === "") {
-    lines = lines.slice(1)
+function dedent(strings, ...values) {
+  // Find the minimum indent of the static strings
+  const staticLines = strings.join("?").split("\n").filter(l => l.trim());
+  const indent = staticLines.reduce((min, line) => {
+    const match = line.match(/^ */);
+    return match ? Math.min(min, match[0].length) : min;
+  }, Infinity);
+
+  // Build the result
+  let result = "";
+  for (let i = 0; i < strings.length; i++) {
+    // Dedent lines
+    result += strings[i].split("\n")
+      .map((line, idx) => idx === 0 ? line : line.substring(indent))
+      .join("\n");
+
+    // Format values
+    if (i < values.length) {
+      let val = String(values[i]);
+      if (val.includes("\n")) {
+        // Indent multiline values
+        const extraIndent = result.split("\n").slice(-1).join().match(/^ */)[0];
+        val = val.split("\n").map((l, idx) => idx === 0 ? l : extraIndent + l).join("\n");
+      }
+      result += val;
+    }
   }
-  const indent = lines[0] ? lines[0].match("( *).*")[1].length : 0;
-  return lines.map(x => x.substring(indent)).join("\n")
+  return result.trim() + "\n";
 }
 
 /**
@@ -66,11 +79,12 @@ class CodeFlavourCSS {
     } else if (gradient.length === 1) {
       return "#" + gradient[0].colorHex;
     } else {
-      return "linear-gradient(90deg,\n" +
-        (comment ? "    /* " + comment + " */\n" : "") +
-        "    " + gradient.map(
-          x => "#" + x.colorHex + "  " + x.posPercent.padStart(6, " ")
-        ).join(",\n    ") + ")";
+      const stops = gradient.map(x => "#" + x.colorHex + "  " + x.posPercent.padStart(6, " "));
+      return dedent`
+        linear-gradient(90deg,
+            /* ${comment} */
+            ${stops.join(",\n")})
+      `.trim()
     }
   }
 
@@ -84,15 +98,15 @@ class CodeFlavourCSS {
    */
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            :root {
-                --${sanitized(name)}: ${indent(3 * 4 + 4, codeBlock)};
-            }
-            
-            html {
-                background: var(--${sanitized(name)});
-            }
-        `)
+    return dedent`
+      :root {
+          --${sanitized(name)}: ${codeBlock};
+      }
+      
+      html {
+          background: var(--${sanitized(name)});
+      }
+    `
   }
 }
 
@@ -105,21 +119,23 @@ class CodeFlavourFastLED {
   static extension = 'ino'
 
   static generate(gradient, name, comment) {
-    return "DEFINE_GRADIENT_PALETTE( " + sanitized(name) + " ){\n" +
-      (comment ? "    /* " + comment + " */\n" : "") +
-      "    " + gradient.padded().map(
-        x => x.pos255.toString().padStart(3, " ") + ",  "
-          + x.rgb.map(v => v.toString().padStart(3, " ")).join(", ")
-      ).join(",\n    ") + "};";
+    const stops = gradient.padded()
+      .map(x => x.pos255.toString().padStart(3, " ") + ",  "
+        + x.rgb.map(v => v.toString().padStart(3, " ")).join(", "))
+    return dedent`
+      DEFINE_GRADIENT_PALETTE( ${sanitized(name)} ){
+          /* ${comment} */
+          ${stops.join(",\n")}};
+    `.trim()
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            #include "FastLED.h"
-            
-            ${indent(3 * 4, codeBlock)}
-        `)
+    return dedent`
+      #include "FastLED.h"
+
+      ${codeBlock}
+    `
   }
 }
 
@@ -133,31 +149,34 @@ class CodeFlavourMatplotlib {
   static extension = 'py'
 
   static generate(gradient, name, comment) {
-    return "LinearSegmentedColormap.from_list('" + name + "', (\n" +
-      (comment ? "    # " + comment + "\n" : "") +
-      "    " + gradient.padded().map(
-        x => "(" + x.pos.toFixed(3) + ", "
-          + "(" + x.rgb.map(v => (v / 255).toFixed(3)).join(", ") + "))"
-      ).join(",\n    ") + "))";
+    const stops = gradient.padded().map(
+      x => "(" + x.pos.toFixed(3) + ", "
+        + "(" + x.rgb.map(v => (v / 255).toFixed(3)).join(", ") + "))"
+    );
+    return dedent`
+      LinearSegmentedColormap.from_list('${name}', (
+          # ${comment}
+          ${stops.join(",\n")}))
+    `.trim()
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            #!/usr/bin/env python
-            
-            from matplotlib.colors import LinearSegmentedColormap
-            
-            ${sanitized(name)} = ${indent(3 * 4, codeBlock)}
-            
-            
-            if __name__ == '__main__':
-                import numpy as np
-                from matplotlib import pyplot as plt
-                
-                plt.imshow([np.arange(1000)], aspect="auto", cmap=${sanitized(name)})
-                plt.show()
-        `)
+    return dedent`
+      #!/usr/bin/env python
+      
+      from matplotlib.colors import LinearSegmentedColormap
+      
+      ${sanitized(name)} = ${codeBlock}
+      
+      
+      if __name__ == '__main__':
+          import numpy as np
+          from matplotlib import pyplot as plt
+          
+          plt.imshow([np.arange(1000)], aspect="auto", cmap=${sanitized(name)})
+          plt.show()
+    `
   }
 }
 
@@ -171,11 +190,14 @@ class CodeFlavourPlotlyPy {
   static extension = 'ipynb' //'py'
 
   static generate(gradient, name, comment) {
-    return `${sanitized(name)} = [\n` +
-      (comment ? "    # " + comment + "\n" : "") +
-      "    " + gradient.padded().map(
-        x => `[${x.pos.toFixed(3)}, '#${x.colorHex}']`
-      ).join(",\n    ") + "]";
+    const stops = gradient.padded().map(
+      x => `[${x.pos.toFixed(3)}, '#${x.colorHex}']`
+    );
+    return dedent`
+      ${sanitized(name)} = [
+          # ${comment}
+          ${stops.join(",\n")}]
+    `.trim()
   }
 
   static file(gradient, name, comment) {
@@ -198,51 +220,51 @@ class CodeFlavourPlotlyPy {
     `)
     */
     // jupyter notebook
-    return tight(`
-            {
-             "cells": [
-              {
-               "cell_type": "code",
-               "execution_count": null,
-               "metadata": {},
-               "outputs": [],
-               "source": [
-                ${indent(3 * 4 + 4, codeBlock.split('\n').map(line => '"' + line + '\\n"').join(",\n"))}
-               ]
-              },
-              {
-               "cell_type": "code",
-               "execution_count": null,
-               "metadata": {},
-               "outputs": [],
-               "source": [
-                "import numpy as np\\n",
-                "import plotly.express as px\\n",
-                "\\n",
-                "px.imshow([np.arange(1000)], aspect='auto', color_continuous_scale=${sanitized(name)})"
-               ]
-              }
-             ],
-             "metadata": {
-              "kernelspec": {
-               "display_name": "Python 3",
-               "language": "python",
-               "name": "python3"
-              },
-              "language_info": {
-               "codemirror_mode": {
-                "name": "ipython",
-                "version": 3
-               },
-               "file_extension": ".py",
-               "mimetype": "text/x-python",
-               "name": "python"
-              }
-             },
-             "nbformat": 4,
-             "nbformat_minor": 4
-            }
-        `)
+    return dedent`
+      {
+       "cells": [
+        {
+         "cell_type": "code",
+         "execution_count": null,
+         "metadata": {},
+         "outputs": [],
+         "source": [
+          ${codeBlock.split('\n').map(line => '"' + line + '\\n"').join(",\n")}
+         ]
+        },
+        {
+         "cell_type": "code",
+         "execution_count": null,
+         "metadata": {},
+         "outputs": [],
+         "source": [
+          "import numpy as np\\n",
+          "import plotly.express as px\\n",
+          "\\n",
+          "px.imshow([np.arange(1000)], aspect='auto', color_continuous_scale=${sanitized(name)})"
+         ]
+        }
+       ],
+       "metadata": {
+        "kernelspec": {
+         "display_name": "Python 3",
+         "language": "python",
+         "name": "python3"
+        },
+        "language_info": {
+         "codemirror_mode": {
+          "name": "ipython",
+          "version": 3
+         },
+         "file_extension": ".py",
+         "mimetype": "text/x-python",
+         "name": "python"
+        }
+       },
+       "nbformat": 4,
+       "nbformat_minor": 4
+      }
+    `
 
   }
 }
@@ -262,20 +284,24 @@ class CodeFlavourTypst {
     } else if (gradient.length === 1) {
       return `#let ${sanitized(name)} = rgb("#${gradient[0].colorHex}")`;
     } else {
-      return `#let ${sanitized(name, '-')} = gradient.linear(\n` +
-        (comment ? "  // " + comment + "\n" : "") +
-        "  " + gradient.padded().map(
-          x => `(rgb("#${x.colorHex}"), ${x.posPercent})`
-        ).join(",\n  ") + ",\n" +
-        "  space: rgb,\n" +
-        ")";
+      const stops = gradient.padded().map(x => `(rgb("#${x.colorHex}"), ${x.posPercent}),`);
+      return dedent`
+        #let ${sanitized(name, '-')} = gradient.linear(
+          // ${comment}
+          ${stops.join("\n")}
+          space: rgb,
+        )
+      `.trim()
     }
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return codeBlock + "\n\n" +
-      `#rect(fill: ${sanitized(name, '-')}, width: 100%)\n`;
+    return dedent`
+      ${codeBlock}
+      
+      #rect(fill: ${sanitized(name, '-')}, width: 100%)
+    `
   }
 }
 
@@ -289,44 +315,47 @@ class CodeFlavourPlotlyJs {
   static extension = 'html'
 
   static generate(gradient, name, comment) {
-    return `let ${sanitized(name)} = [\n` +
-      (comment ? "    // " + comment + "\n" : "") +
-      "    " + gradient.padded().map(
-        x => `[${x.pos.toFixed(3)}, '#${x.colorHex}']`
-      ).join(",\n    ") + "]";
+    const stops = gradient.padded().map(
+      x => `[${x.pos.toFixed(3)}, '#${x.colorHex}']`
+    );
+    return dedent`
+      let ${sanitized(name)} = [
+          // ${comment}
+          ${stops.join(",\n")}]
+    `.trim()
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <title>${name}</title>
-                <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
-                <script>
-                
-                    ${indent(5 * 4, codeBlock)}
-            
-                    const data = [
-                      {
-                        z: [[...Array(1000).keys()]],
-                        colorscale: ${sanitized(name)},
-                        type: 'heatmap'
-                      }
-                    ];
-                    
-                    window.onload = function(){Plotly.newPlot('chart', data);}    
-                
-                </script>
-            </head>
-            
-            <body>
-                <div id="chart"></div>
-            </body>
-            </html>
-        `)
+    return dedent`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <title>${name}</title>
+          <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+          <script>
+          
+              ${codeBlock}
+      
+              const data = [
+                {
+                  z: [[...Array(1000).keys()]],
+                  colorscale: ${sanitized(name)},
+                  type: 'heatmap'
+                }
+              ];
+              
+              window.onload = function(){Plotly.newPlot('chart', data);}    
+          
+          </script>
+      </head>
+      
+      <body>
+          <div id="chart"></div>
+      </body>
+      </html>
+    `
 
   }
 }
@@ -341,29 +370,32 @@ class CodeFlavourSVG {
   static extension = 'svg'
 
   static generate(gradient, name, comment) {
-    return "<linearGradient id=\"" + sanitized(name) + "\">\n" +
-      (comment ? "    <!-- " + comment + " -->\n" : "") +
-      "    " + gradient.map(
-        x => "<stop offset=\"" + x.pos.toFixed(3) +
-          "\" stop-color=\"#" + x.colorHex + "\" />"
-      ).join("\n    ") + "\n" +
-      "</linearGradient>";
+    const stops = gradient.map(
+      x => "<stop offset=\"" + x.pos.toFixed(3) +
+        "\" stop-color=\"#" + x.colorHex + "\" />"
+    )
+    return dedent`
+      <linearGradient id="${sanitized(name)}">
+          <!-- ${comment} -->
+          ${stops.join("\n")}
+      </linearGradient>
+    `.trim()
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            <?xml version="1.0" encoding="UTF-8"?>
-            <svg xmlns="http://www.w3.org/2000/svg">
-            
-            <defs>
-                ${indent(4 * 4, codeBlock)}
-            </defs>
-            
-            <rect width=\"100%\" height=\"100%\" fill=\"url(#${sanitized(name)})\" />
-            
-            </svg>
-        `)
+    return dedent`
+      <?xml version="1.0" encoding="UTF-8"?>
+      <svg xmlns="http://www.w3.org/2000/svg">
+      
+      <defs>
+          ${codeBlock}
+      </defs>
+      
+      <rect width=\"100%\" height=\"100%\" fill=\"url(#${sanitized(name)})\" />
+      
+      </svg>
+    `
   }
 }
 
@@ -377,32 +409,35 @@ class CodeFlavourAndroidVectorDrawable {
   static extension = 'xml'
 
   static generate(gradient, name, comment) {
-    return "<gradient android:type=\"linear\" android:endX=\"1\">\n" +
-      (comment ? "    <!-- " + comment + " -->\n" : "") +
-      "    " + gradient.map(
-        x => "<item android:offset=\"" + x.pos.toFixed(3) +
-          "\" android:color=\"#" + x.colorHex + "\" />"
-      ).join("\n    ") + "\n" +
-      "</gradient>";
+    const stops = gradient.map(
+      x => "<item android:offset=\"" + x.pos.toFixed(3) +
+        "\" android:color=\"#" + x.colorHex + "\" />"
+    )
+    return dedent`
+      <gradient android:type="linear" android:endX="1">
+          <!-- ${comment} -->
+          ${stops.join("\n")}
+      </gradient>
+    `.trim()
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            <?xml version="1.0" encoding="utf-8"?>
-            <vector xmlns:android="http://schemas.android.com/apk/res/android"
-                    xmlns:aapt="http://schemas.android.com/aapt"
-                    android:width="100dp"
-                    android:height="100dp"
-                    android:viewportWidth="1"
-                    android:viewportHeight="1">
-                <path android:pathData="M0,0 H1 V1 H0 Z">
-                    <aapt:attr name="android:fillColor">
-                        ${indent(6 * 4, codeBlock)}
-                    </aapt:attr>
-                </path>
-            </vector>
-        `)
+    return dedent`
+      <?xml version="1.0" encoding="utf-8"?>
+      <vector xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:aapt="http://schemas.android.com/aapt"
+              android:width="100dp"
+              android:height="100dp"
+              android:viewportWidth="1"
+              android:viewportHeight="1">
+          <path android:pathData="M0,0 H1 V1 H0 Z">
+              <aapt:attr name="android:fillColor">
+                  ${codeBlock}
+              </aapt:attr>
+          </path>
+      </vector>
+    `
   }
 }
 
@@ -416,27 +451,28 @@ class CodeFlavourQML {
   static extension = 'qml'
 
   static generate(gradient, name, comment) {
-    return "gradient: Gradient {\n" +
-      (comment ? "    /* " + comment + " */\n" : "") +
-      "    orientation: Gradient.Horizontal\n" +
-      "    " + gradient.map(
-        x => "GradientStop { position: " + x.pos.toFixed(3) +
-          "; color: \"#" + x.colorHex + "\" }"
-      ).join("\n    ") + "\n" +
-      "}";
+    const stops = gradient.map(x => "GradientStop { position: " + x.pos.toFixed(3)
+      + "; color: \"#" + x.colorHex + "\" }");
+    return dedent`
+    gradient: Gradient {
+        /* ${comment} */
+        orientation: Gradient.Horizontal
+        ${stops.join("\n")}
+    }
+    `.trim()
   }
 
   static file(gradient, name, comment) {
     const codeBlock = this.generate(gradient, name, comment);
-    return tight(`
-            import QtQuick 2.15
+    return dedent`
+      import QtQuick 2.15
 
-            Rectangle {
-            
-                ${indent(4 * 4, codeBlock)}
-            
-            }
-        `)
+      Rectangle {
+      
+          ${codeBlock}
+      
+      }
+    `
   }
 }
 
