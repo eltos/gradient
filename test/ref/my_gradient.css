@@ -1,0 +1,10 @@
+:root {
+    --my_gradient: linear-gradient(90deg,
+        /* test comment */
+        #123456    0.0%,
+        #ABCDEF  100.0%);
+}
+
+html {
+    background: var(--my_gradient);
+}

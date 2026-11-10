@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>my gradient</title>
+    <script src="https://cdn.plot.ly/plotly-2.6.3.min.js"></script>
+    <script>
+    
+        let my_gradient = [
+            // test comment
+            [0.000, '#123456'],
+            [1.000, '#ABCDEF']]
+
+        const data = [
+          {
+            z: [[...Array(1000).keys()]],
+            colorscale: my_gradient,
+            type: 'heatmap'
+          }
+        ];
+        
+        window.onload = function(){Plotly.newPlot('chart', data);}    
+    
+    </script>
+</head>
+
+<body>
+    <div id="chart"></div>
+</body>
+</html>

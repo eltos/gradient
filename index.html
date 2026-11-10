@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="designer-document">
 
 <head>
 	<meta charset="UTF-8">
 	<title>Color gradient designer</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1">
-	<meta name="google-site-verification" content="1XZiMnZJhVwjjaGHtwr5-AcwBznp5rJ9lLchXh1tX2I" />
+	<meta name="google-site-verification" content="1XZiMnZJhVwjjaGHtwr5-AcwBznp5rJ9lLchXh1tX2I"/>
 
 	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
@@ -21,28 +21,35 @@
 	<script src="src/picker.js"></script>
 
 	<!-- Optional syntax highlighting using highlight.js (https://github.com/highlightjs) -->
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/base16/ros-pine-dawn.min.css">
+	<link rel="stylesheet"
+		  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/base16/ros-pine-dawn.min.css">
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/arduino.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/qml.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/stylus.min.js"></script>
-
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/languages/stylus.min.js"></script>
 
 
 </head>
-
 
 
 <body onload="onLoad();" onhashchange="onHashChanged();">
 
 <header>
 
-	<h1 class="title">Color gradient designer</h1>
-	
+	<div class="brand">
+		<h1 class="title">Color gradient designer</h1>
+		<p class="subtitle">Shape, tune, and export your next color story.</p>
+	</div>
+
 	<div class="menu">
-		<a title="Favourites" href="gallery" onclick="window.location='gallery'+window.location.hash; return false" class="emoji">&#x2b50;&#xfe0f;</a>
-		<div title="Copy permalink" onclick="copyLink();" class="emoji clickable">&#x1f517;&#xfe0f;</div>
-		<div title="Undo" onclick="window.history.back();" class="emoji clickable">&#x21a9;&#xfe0f;</div>
+		<a title="Favourites" href="gallery"
+		   onclick="window.location='gallery'+window.location.hash; return false" class="emoji">&#x2b50;&#xfe0f;</a>
+		<div title="Copy permalink" onclick="copyLink();" class="emoji clickable">
+			&#x1f517;&#xfe0f;
+		</div>
+		<div title="Undo" onclick="window.history.back();" class="emoji clickable">
+			&#x21a9;&#xfe0f;
+		</div>
 		<div title="Redo" onclick="window.history.forward();" class="emoji clickable">&#x21aa;&#xfe0f;</div>
 		<div title="About" onclick="aboutShow()" class="emoji">&#x2139;&#xfe0f;</div>
 	</div>
@@ -53,106 +60,206 @@
 
 	<div class="gradient">
 
-
-
-	
-			
 		<div class="gradient-background left"></div>
 		<div class="gradient-background" id="gradient-background"></div>
 		<div class="gradient-background right"></div>
-		<div class="bar" >		
-			<div id="sliders"></div>
-			<div id="gradient" class="clickable" title="Click to add anchor" onclick="actionInsert(event);"></div>
-			<div class="picker" id="picker"></div>
-		</div>
-
-
-		<div class="control">
-
-			<div class="settings">
-				<div title="Show cyclic repeating gradient">
-					<label class="switch reactive">
-						<input type="checkbox" id="setting-cyclic" onchange="onHashChanged();"/>
-						<span class="slider round"></span>
-					</label>
-					<label class="switchlabel">Cyclic repeat</label>
+		<div class="canvas-stage">
+			<svg class="stop-connectors" id="stop-connectors" aria-hidden="true">
+				<path id="selected-connector"></path>
+				<path id="preview-connector"></path>
+			</svg>
+			<div class="bar" id="gradient-bar">
+				<div id="sliders"></div>
+				<div id="gradient" class="clickable" role="button"
+					 aria-label="Gradient canvas. Click to add a color stop."
+					 title="Hover to preview and click to add a color stop"
+					 onclick="actionInsert(event);"></div>
+				<div class="stop-preview-marker" id="stop-preview-marker" aria-hidden="true">
+					<span class="stop-preview-handle"></span>
 				</div>
-				<button class="button" title="Move nodes to be equally distributed" onclick="actionDistribute();">Distribute evenly</button>
-				<button class="button" title="Reverse node order" onclick="actionReverse();">Reverse</button>
-				<button class="button" title="Append mirrored version of this gradient" onclick="actionMirror();">Mirrored</button>
-				<button class="button" title="Subdivide gradient by adding nodes with color interpolated using the HLC color space" onclick="actionDivide(1, 'hlc_uv');">Subdivide using HLC</button>
-				<button class="button" title="Normalize colors to have equal lightness in HSL color space" onclick="actionNormalize('hsl', 2);">Normalize lightness</button>
-				<button class="button" title="Generate a random gradient" onclick="actionRandom();">Generate random</button>
 			</div>
-
-			<div class="code-tabs">
-				<div class="tab-bar">
-					<!-- tab buttons -->
-					<div id="tab-bar-box"></div>
-					<a title="Add new" href="https://github.com/eltos/gradient/issues/new/choose" class="tab-bar-button codestyle" style="text-decoration: none;">+</a>
+			<div class="canvas-workbench">
+				<div class="canvas-side-config">
+					<section class="panel stop-config" id="stop-config" aria-label="Selected color stop">
+						<div class="panel-heading">
+							<div class="panel-title">
+								<p class="canvas-eyebrow">COLOR STOP</p>
+								<p class="panel-description">Configure the stop's properties.</p>
+							</div>
+							<div class="panel-actions">
+								<span class="action-button" id="stop-add-hint" aria-live="polite" hidden>
+									Click to add
+								</span>
+								<button class="action-button" id="stop-previous" type="button"
+										title="Select previous color stop" aria-label="Select previous color stop">❮</button>
+								<button class="action-button" id="stop-delete" type="button"
+										title="Remove color stop" aria-label="Remove color stop">Delete</button>
+								<button class="action-button" id="stop-next" type="button"
+										title="Select next color stop" aria-label="Select next color stop">❯</button>
+							</div>
+						</div>
+						<div class="stop-config-content">
+							<div class="picker" id="picker" role="group"
+								 aria-label="Color picker"></div>
+							<div class="stop-config-controls" id="stop-config-controls">
+								<div class="field-group">
+									<label class="field-label position-input-label">
+										Position
+										<input id="stop-position" class="form-control"
+											   type="text" inputmode="decimal"
+											   title="Anchor position (%)"
+											   aria-label="Color stop position in percent">
+									</label>
+									<label class="field-label color-input-label">
+										Color
+										<input id="stop-color" class="form-control form-control--swatch"
+											   type="text" pattern="#?[0-9A-Fa-f]{6}"
+											   title="Anchor color (hex)"
+											   aria-label="Color stop color in hexadecimal">
+									</label>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section class="panel gradient-config" aria-label="Gradient settings">
+						<div class="panel-heading">
+							<div class="panel-title">
+								<p class="canvas-eyebrow">SETTINGS</p>
+								<p class="panel-description">Adjust the gradient behavior.</p>
+							</div>
+							<div class="panel-actions">
+								<details class="more-tools">
+									<summary class="action-button">Tools</summary>
+									<div class="tool-actions">
+										<button class="button action-button" title="Move nodes to be equally distributed"
+												onclick="actionDistribute();">Distribute evenly
+										</button>
+										<button class="button action-button" title="Reverse node order"
+												onclick="actionReverse();">Reverse
+										</button>
+										<button class="button action-button"
+												title="Append mirrored version of this gradient"
+												onclick="actionMirror();">Add mirrored
+										</button>
+										<button class="button action-button"
+												title="Subdivide gradient by adding nodes with color interpolated using the HLC color space"
+												onclick="actionDivide(1, 'hlc_uv');">Subdivide using HLC
+										</button>
+										<button class="button action-button"
+												title="Normalize colors to have equal lightness in HSL color space"
+												onclick="actionNormalize('hsl', 2);">Normalize lightness
+										</button>
+										<button class="button action-button" title="Generate a random gradient"
+												onclick="actionRandom();">Generate random
+										</button>
+									</div>
+								</details>
+							</div>
+						</div>
+						<div class="field-group">
+							<label class="field-label" for="gradient-name">Gradient name</label>
+							<input class="form-control" type="text" placeholder="my gradient" id="gradient-name"
+								   onchange="onNameChanged()" onkeyup="onNameChanged()"/>
+						</div>
+						<div>
+							<div class="repeat-setting" title="Show cyclic repeating gradient">
+								<label class="switch">
+									<input type="checkbox" id="setting-cyclic"
+										   onchange="onHashChanged();"/>
+									<span class="slider round"></span>
+								</label>
+								<label class="switchlabel field-label" for="setting-cyclic">Cyclic repeat</label>
+							</div>
+						</div>
+					</section>
 				</div>
-				<div class="codebox codestyle selected" title="Click to copy code to clipboard" onclick="copyCode();">
-					<div class="tab-body" id="tab-body-box">
-						<!-- tab contents -->
+				<div class="panel control">
+
+					<div class="panel-heading export-heading">
+					<div class="panel-title">
+							<p class="canvas-eyebrow">EXPORT</p>
+							<p class="panel-description">Choose a format, then copy or download
+								your gradient.</p>
+						</div>
+						<div class="panel-actions">
+							<button class="button action-button action-button--primary primary-action" onclick="copyCode()">Copy code
+							</button>
+							<button class="button action-button" onclick="downloadCode()">Download example</button>
+						</div>
 					</div>
-				</div>
-			</div>
-
-			<div class="settings">
-				<div title="Gradient name for use in code, file and gallery">
-					<label for="gradient-name">Gradient name:</label>
-					<input type="text" placeholder="my gradient" id="gradient-name" onchange="onNameChanged()" onkeyup="onNameChanged()"/>
-				</div>
-				<button onclick="copyCode()">Copy code fragment</button>
-				<button onclick="downloadCode()">Download as file (with usage example)</button>
-			</div>
-			
-			
-		</div>
+					<div class="code-tabs">
+						<div class="tab-bar">
+							<!-- tab buttons -->
+							<div id="tab-bar-box"></div>
+							<a title="Add new"
+							   href="https://github.com/eltos/gradient/issues/new/choose"
+							   class="tab-bar-button codestyle" style="text-decoration: none;">+</a>
+						</div>
+						<div class="codebox codestyle selected"
+							 title="Click to copy code to clipboard" onclick="copyCode();">
+							<div class="tab-body" id="tab-body-box">
+								<!-- tab contents -->
+							</div>
+						</div>
+					</div>
 	</div>
 
-
-
-	<div id="about" class="popup-back" onclick="aboutDismiss()">
-		<div class="popup">
-			<div class="close" onclick="aboutDismiss()">&times;</div>
-			<div>
-				<h1>About</h1>
-				<p>A color gradient designer to help you create awesome gradients for your projects</p>
-
-				<ul>
-					<li>Add color nodes by clicking the bar</li>
-					<li>Adjust node positions via drag & drop or the input field (value in percent)</li>
-					<li>Select colors with the picker or input field</li>
-					<li>Copy the generated code or download it as file</li>
-				</ul>
-
-				Use <span class="emoji">&#x2b50;&#xfe0f;</span> to access a personal gallery which allows you to store your favourite gradients locally in your browser.
-				Gradients can also be shared by the URL.
+				</div>
 			</div>
-
-			<div>
-				<p style="font-weight: bold">Did you know?</p>
-				<ul>
-					<li>The color input field accepts not only hex values (e.g. <code>#F80</code>, <code>FE5310</code> or <code>0x2f67a8</code>), but also RGB color triples like <code>255,128,0</code> or <code>0.1,0.5,1</code></li>
-					<li>Changes can be undone and redone with browser navigation or <span class="emoji">&#x21a9;&#xfe0f;</span> and <span class="emoji">&#x21aa;&#xfe0f;</span> </li>
-					<li>You can name a gradient with the field below the code output (e.g. for the gallery)</li>
-				</ul>
-			</div>
-
-			<div>
-				<h2>Find this project on GitHub</h2>
-				This open source project is available on GitHub:
-				<a href="https://github.com/eltos/gradient">github.com/eltos/gradient</a>
-				<p>
-					<a href="https://github.com/eltos/gradient"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/eltos/gradient?style=social"></a>
-				</p>
-
-			</div>
-
 		</div>
-	</div>
 
+
+		<div id="about" class="popup-back" onclick="aboutDismiss()">
+			<div class="popup">
+				<div class="close" onclick="aboutDismiss()">&times;</div>
+				<div>
+					<h1>About</h1>
+					<p>A color gradient designer to help you create awesome gradients for your
+						projects</p>
+
+					<ul>
+						<li>Hover over the bar to preview a color stop, then click to add it</li>
+						<li>Drag a handle to move it, or select it to edit its position and color
+							below the gradient
+						</li>
+						<li>Use the always-visible color picker or enter a color value directly</li>
+						<li>Copy the generated code or download it as file</li>
+					</ul>
+
+					Use <span class="emoji">&#x2b50;&#xfe0f;</span> to access a personal gallery
+					which allows you to store your favourite gradients locally in your browser.
+					Gradients can also be shared by the URL.
+				</div>
+
+				<div>
+					<p style="font-weight: bold">Did you know?</p>
+					<ul>
+						<li>The color input field accepts not only hex values (e.g.
+							<code>#F80</code>, <code>FE5310</code> or <code>0x2f67a8</code>), but
+							also RGB color triples like <code>255,128,0</code> or
+							<code>0.1,0.5,1</code></li>
+						<li>Changes can be undone and redone with browser navigation or <span
+								class="emoji">&#x21a9;&#xfe0f;</span> and <span class="emoji">&#x21aa;&#xfe0f;</span>
+						</li>
+						<li>You can name a gradient with the field below the code output (e.g. for
+							the gallery)
+						</li>
+					</ul>
+				</div>
+
+				<div>
+					<h2>Find this project on GitHub</h2>
+					This open source project is available on GitHub:
+					<a href="https://github.com/eltos/gradient">github.com/eltos/gradient</a>
+					<p>
+						<a href="https://github.com/eltos/gradient"><img alt="GitHub Repo stars"
+																		 src="https://img.shields.io/github/stars/eltos/gradient?style=social"></a>
+					</p>
+
+				</div>
+
+			</div>
+		</div>
 
 
 </main>
