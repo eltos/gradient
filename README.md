@@ -24,6 +24,7 @@ Feel free to open an issue or submit a merge request to support additional forma
 | [🪙 DONATE](https://github.com/sponsors/eltos) | [❤️ SAY THANKS](https://saythanks.io/to/eltos)
 |-|-|
 
+[![Screenshot](.github/screenshot.png)](https://eltos.github.io/gradient)
 
 -------------------
 
