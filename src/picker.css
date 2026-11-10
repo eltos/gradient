@@ -4,15 +4,15 @@
  */
 
 .picker {
-    --color-background: white;
-    --color-border: lightgray;
+    --color-background: #f0f1f7;
+    --color-border: dfe2eb;
     --color-contrast: black;
 }
 
 @media (prefers-color-scheme: dark) {
     .picker {
-        --color-background: #222;
-        --color-border: #444;
+        --color-background: #22232c;
+        --color-border: #383945;
     }
 }
 
@@ -26,7 +26,7 @@
     padding: 5px;
     margin: 10px;
     border-style: solid;
-    border-radius: 5px;
+    border-radius: 12px;
     border-width: 2px;
     border-color: var(--color-border);
     z-index: 999;
@@ -62,15 +62,14 @@
     top: 50%;
     width: calc(50% - 15px);
     height: calc(50% - 15px);
+    pointer-events: none;
 }
 
 .picker .node {
     position: absolute;
-    left: 0%;
-    top: -100%;
-    transform: translate(-6px, -6px);
-    width: 6px;
-    height: 6px;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
     background: transparent;
     border-style: solid;
     border-width: 3px;
@@ -94,9 +93,5 @@
 
 .picker .picker-sv .sv-node {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 50%;
-    height: 50%;
+    inset: 0;
 }
-

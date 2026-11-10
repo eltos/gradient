@@ -1,14 +1,14 @@
 /**
- * HSV color picker
- *
- * Add this to page head:
- *   <link rel="stylesheet" href="src/picker.css">
- *   <script src="src/picker.js"></script>
- * and to page body:
- *   <div class="picker" id="picker"></div>
- *
- *
- */
+* HSV color picker
+*
+* Add this to page head:
+*   <link rel="stylesheet" href="src/picker.css">
+*   <script src="src/picker.js"></script>
+* and to page body:
+*   <div class="picker" id="picker"></div>
+*
+*
+*/
 
 
 function color2hsv(color) {
@@ -58,9 +58,14 @@ function pickerRefreshUI() {
   pickerHueDot.style.top = -Math.cos(Math.PI * pickerH / 180) * 100 + "%";
   pickerHueDot.style.background = color2hex(hsv2color(pickerH, 1, 1));
 
-  // saturation along right side of triangle, value as distance to lower left edge
-  pickerSvDot.style.left = 100 * Math.cos(30 * Math.PI / 180) * (pickerV * (2 - pickerS) - 1) + "%";
-  pickerSvDot.style.top = 50 - 150 * pickerV * pickerS + "%";
+  // Position the marker in the same triangular coordinates used by the SVG.
+  const hueWeight = pickerV * pickerS;
+  const whiteWeight = pickerV * (1 - pickerS);
+  const blackWeight = 1 - pickerV;
+  const x = Math.cos(Math.PI / 6) * (whiteWeight - blackWeight);
+  const y = -hueWeight + 0.5 * (whiteWeight + blackWeight);
+  pickerSvDot.style.left = 50 + 50 * x + "%";
+  pickerSvDot.style.top = 50 + 50 * y + "%";
   pickerSvDot.style.background = color2hex(hsv2color(pickerH, pickerS, pickerV));
 
   // triangle
@@ -124,41 +129,69 @@ function initPicker(id, onColorChangedCallback) {
   pickerSvDot.id = id + '-sv-node';
   svNode.appendChild(pickerSvDot);
 
-
-  // init interactive elements
-  makeDraggable(pickerHueDot, function (element, e) {
-    // update position
-    let x = e.clientX ?? e.touches?.[0]?.clientX,
-      y = e.clientY ?? e.touches?.[0]?.clientY;
-    if (x === undefined || y === undefined) return;
-    let box = element.parentElement.getBoundingClientRect();
-    let dx = (x - box.left) / box.width,
-      dy = (y - box.top) / box.height;
-
-    pickerH = 180 * Math.atan2(dx, -dy) / Math.PI;
-
+  function applyPickerColor() {
     pickerRefreshUI();
     onColorChangedCallback(hsv2color(pickerH, pickerS, pickerV));
+  }
+
+  function makePickerSurfaceInteractive(surface, updateColor) {
+    let activePointerId = undefined;
+    surface.style.touchAction = "none";
+    surface.addEventListener("pointerdown", function (event) {
+      if (!updateColor(event)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      activePointerId = event.pointerId;
+      surface.setPointerCapture(event.pointerId);
+    });
+    surface.addEventListener("pointermove", function (event) {
+      if (event.pointerId === activePointerId) updateColor(event, true);
+    });
+    const stopDragging = function (event) {
+      if (event.pointerId === activePointerId) activePointerId = undefined;
+    };
+    surface.addEventListener("pointerup", stopDragging);
+    surface.addEventListener("pointercancel", stopDragging);
+  }
+
+  makePickerSurfaceInteractive(pickerHue, function (event, dragging) {
+    let box = pickerHue.getBoundingClientRect();
+    let dx = (event.clientX - (box.left + box.width / 2)) / box.width;
+    let dy = (event.clientY - (box.top + box.height / 2)) / box.height;
+    let radius = Math.hypot(dx, dy);
+    if (!dragging && (radius < 0.37 || radius > 0.48)) return false;
+    pickerH = 180 * Math.atan2(dx, -dy) / Math.PI;
+    applyPickerColor();
+    return true;
   });
 
-  makeDraggable(pickerSvDot, function (element, e) {
-    // update position
-    let x = e.clientX ?? e.touches?.[0]?.clientX,
-      y = e.clientY ?? e.touches?.[0]?.clientY;
-    if (x === undefined || y === undefined) return;
-    let box = element.parentElement.getBoundingClientRect();
-    let dx = (x - box.left) / box.width, // -1 .. +1
-      dy = (y - box.top) / box.height;
-
-    let v = dx / Math.cos(30 * Math.PI / 180) / 2 + 0.5 + (0.5 - dy) / 3,
-      s = (0.5 - dy) / 1.5 / v;
-    pickerV = Math.min(Math.max(v, 0), 1);
-    pickerS = Math.min(Math.max(s, 0), 1);
-
-    pickerRefreshUI();
-    onColorChangedCallback(hsv2color(pickerH, pickerS, pickerV));
+  makePickerSurfaceInteractive(pickerSV, function (event) {
+    let box = svg.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    let x = 2 * (event.clientX - box.left) / box.width - 1;
+    let y = 2 * (event.clientY - box.top) / box.height - 1;
+    let hueWeight = (0.5 - y) / 1.5;
+    let whiteWeight = (1 - hueWeight + x / Math.cos(Math.PI / 6)) / 2;
+    let blackWeight = 1 - hueWeight - whiteWeight;
+    [hueWeight, whiteWeight, blackWeight] = projectToSimplex(hueWeight, whiteWeight, blackWeight);
+    pickerV = hueWeight + whiteWeight;
+    pickerS = pickerV ? hueWeight / pickerV : 1;
+    applyPickerColor();
+    return true;
   });
 
   pickerHide();
 
+}
+
+function projectToSimplex(...weights) {
+  const sorted = [...weights].sort((a, b) => b - a);
+  let cumulative = 0;
+  let threshold = 0;
+  for (let i = 0; i < sorted.length; i++) {
+    cumulative += sorted[i];
+    const candidate = (cumulative - 1) / (i + 1);
+    if (sorted[i] > candidate) threshold = candidate;
+  }
+  return weights.map(weight => Math.max(weight - threshold, 0));
 }
